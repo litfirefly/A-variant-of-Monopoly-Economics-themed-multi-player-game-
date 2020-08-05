@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Square.h"
+#include "square.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -19,11 +19,11 @@ class Player{
 public:
 	Player(char piece, std::string name);
 	void printPlayerAssets();
-	int transferMoney(std::shared_ptr<Player> to, int amount);
-	int transferProperty(std::shared_ptr<Player> to,std::shared_ptr<int>);
+	void transferMoney(std::shared_ptr<Player> to, int amount);
+	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<int>);
 	void addSquare(std::shared_ptr<Square>);
 	void addMoney(int amount);
-	int subtractMoney(int amount);
+	void  subtractMoney(int amount);
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "player.h"
 #include <iostream>
+#include <stdexcept>
 using namespace std;
 Player::Player(char piece, std::string name): piece{piece}, name{name}, position{0}, inJail{false}, jailTurns{-1}, isBankrupt{false}, money{1500}, numOfResidences{0}, numOfGyms{0}{}
 void Player::printPlayerAssets(){
@@ -24,7 +25,7 @@ void Player::printPlayerAssets(){
 		cout << squaresOwned[i] << endl;
 	}
 }
-int Player::transferMoney(std::shared_ptr<Player> to, int amount){
+void Player::transferMoney(std::shared_ptr<Player> to, int amount){
 	int fail = subtractMoney(amount);
 	if (!fail){
 		to->addMoney(amount);
@@ -32,7 +33,7 @@ int Player::transferMoney(std::shared_ptr<Player> to, int amount){
 	return fail;
 }
 
-int Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square> square){
+void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square> square){
 	int found=-1;
 	int size = squaresOwned.size();
 	for (int i=0; i<size; i++){
@@ -42,11 +43,11 @@ int Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square>
 		}
 	}
 	if (found==-1){
-		return -1;
+		throw invalid_argument("Property Not Found");
+		return;
 	}	
 	squaresOwned.erase(squaresOwned.begin()+found);
 	to->addSquare(square);
-	return 0;
 }
 
 void Player::addSquare(std::shared_ptr<Square> square){
@@ -60,18 +61,18 @@ void Player::addMoney(int amount){
 	money+=amount;
 }
 
-int Player::subtractMoney(int amount){
+void Player::subtractMoney(int amount){
 
 	if (isBankrupt){
-		cout << "The player ("<< name <<") is bankrupt." << endl;
-		return -2;
+		throw invalid_argument("Player is bankrupt.");
+		return;
 	}
 	if (money < amount){
-		cout << "The player ("<< name <<") does not have enough money." << endl;
-		return -1;
+		throw invalid_arguement("Player doesn't have enough money.");
+		return;
 	}
 	money-=amount;
-	return 0;
-}
+	return;
 
+}
 
