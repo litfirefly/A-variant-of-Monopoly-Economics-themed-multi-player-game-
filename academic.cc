@@ -6,48 +6,12 @@
 #include <iostream>              
 using namespace std;
 
-int improvementCost;
-vector<int> tuition;
-bool owned;
-bool mortgaged;
-	
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
-		  int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
-									     improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
-		if(owner){
-			owned=true;
-		}	
-}
-
-
-void AcademicProperty::action(Player &player){
-		cout << "You have landed on " << name "." << endl;
-		if (owner==nullptr){
-			cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
-			string line = "";
-			cin >> line;
-			if (line=="buy"){
-				buy(player);
-				cout << "You bought this property for " << cost << endl;
-			}
-			else{
-				cout << "Since you didn't buy the property, we will now auction it." << endl;
-				auction(players);
-			}
-		}
-		else if (owner==player){
-			cout << "You own this property, no action is to be taken." << endl;
-		}
-		else{
-			cout << "The property is owned by " << owner->getName() ". The tuition is currently " << tuition[improvement_level] << "." << endl;
-			payTuition(player);
-		}
-}
+AcademicProperty::AcademicProperty(std::string name, std::string monopolyBlock, int position, int improvementCost, vector<int> tuition) : name{name}, position{position}, monopolyBlock{monopolyBlock}, ownable{true}, improvable{true}, tuition{tuition}, improvementCost{improvementCost} {}
 
 void AcademicProperty::buy(Player &player){
         if(!isOwned()){
                 if(player->money - price >= 0){
-                        player->subtractMoney(cost);
+                        player->subtractMoney(price);
                         owned = true;
                         mortgaged = false;
                         owner = player;
@@ -160,14 +124,22 @@ void AcademicProperty::mortgage(Player &player){
         }
 }
 
-
-int AcademicProperty::getImprovementCost(){
-	return improvementCost;
+string Residences::getName(){
+        return name;
 }
 
-vector<int> AcademicProperty::getTuition(){
-	return tuition;
+int AcademicProperty::getPosition(){
+        return position;
 }
+
+bool AcademicProperty::getImprovable(){
+        return improvable;
+}
+
+bool AcademicProperty::getOwnable(){
+        return ownable;
+}
+
 bool AcademicProperty::isOwned(){
         return owned;
 }
@@ -187,4 +159,3 @@ bool AcademicProperty::isMonopolyBlockValid(Player &player, vector<shared_ptr<Sq
 		return (counter == getMonopolyBlockSize());
 	}
 }
-

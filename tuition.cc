@@ -5,30 +5,40 @@
 #include <iostream>
 using namespace std;
 
-Tuition::Tuition(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+Tuition::Tuition(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {}
 
 void Tuition::payTuition(Player &player){
-	int 10percent = player->getWorth() * 0.1;
 	cout << "Choose between paying $300 tuition or 10\% of your total worth (including your savings, printed prices of all buildings you own, and costs of each improvement)." << endl;
 	cout << "Enter 'tuition' to pay using tuition and '10' to pay 10\% of your total worth." << endl;
-	cout << "10\% of your worth is " << 10percent << endl; 
-	while(true){
-		string command;
-        	cin >> command;
-	
-        	if (cin.eof()) break;	
 
-		if( command == "tuition" ){
-			player->subtractMoney(300);
-		}
-		else if ( command == "10" ){
-			player->subtractMoney(10percent);
-		}
-		else{
-			cout << "Please enter a valid command" << endl;	
-			continue;
-		}
-		break;
+	string command;
+        cin >> command;
+
+        if (cin.eof()) break;	
+
+	if( command == "tuition" ){
+		player->subtractMoney(300);
 	}
+	else if ( command == "10" ){
+		// Create a getSavings() function in player class
+		int money = player->getSavings() * 0.1;
+		player->subtractMoney(money);
+	}
+	else{
+		// throw exception that calls this function again
+	}
+}
 
+string Tuition::getName(){
+        return name;
+}
+
+int Tuition::getPosition(){
+        return position;
+}
+bool Tuition::getImprovable(){
+        return improvable;
+}
+bool Tuition::getOwnable(){
+        return ownable;
 }

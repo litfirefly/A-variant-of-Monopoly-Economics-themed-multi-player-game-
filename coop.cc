@@ -1,16 +1,25 @@
 #include <string>  
-#include "coop.h" 
+#include "osap.h" 
 #include <vector>
 #include <memory>
 using namespace std;  
 
+Coop::Coop(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {}  
 
-Coop::Coop(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
-
-void Coop::action(Player &player, vector<shared_ptr<Player>> otherPlayers){
-	payBack(player, otherPlayers);
-}
-void Coop::payBack(Player &player, vector<shared_ptr<Player>> otherPlayers){
-	player->subtractMoney(payMoney, otherPlayers);
+void Coop::payBack(Player &player){
+	player->subtractMoney(money);  
 }
 
+string Coop::getName(){
+        return name;
+}
+
+int Coop::getPosition(){
+        return position;
+}
+bool Coop::getImprovable(){
+        return improvable;
+}
+bool Coop::getOwnable(){
+        return ownable;
+}

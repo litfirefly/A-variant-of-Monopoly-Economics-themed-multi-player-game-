@@ -8,7 +8,7 @@
 #include <time.h>
 using namespace std;
 
-SLC::SLC(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+SLC::SLC(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {}
 
 void SLC::getSLCEffect(Player &player){
 	srand (time(NULL)); 
@@ -54,3 +54,16 @@ void SLC::getSLCEffect(Player &player){
 	}
 }
 
+string SLC::getName(){
+	return name;
+}
+
+int SLC::getPosition(){
+	return position;
+}
+bool SLC::getImprovable(){
+	return improvable;
+}
+bool SLC::getOwnable(){
+	return ownable;
+}
