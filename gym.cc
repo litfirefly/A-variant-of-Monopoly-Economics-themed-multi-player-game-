@@ -8,7 +8,37 @@
 #include <time.h>
 using namespace std;
 
-Gym::Gym(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{true}, improvable{false} {}
+Gym::Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): Square{board, name, "", position, price, owner, improvement_level, true, false}, 
+	owned{false}, mortgaged{mortgaged} {
+		if(owner){
+			owned=true;
+		}	
+}
+
+void Gym::action(Player &player){
+                cout << "You have landed on " << name "." << endl;
+                if (owner==nullptr){
+                        cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
+                        string line = "";
+                        cin >> line;
+                        if (line=="buy"){
+                                buy(player);
+                                cout << "You bought this property for " << cost << endl;
+                        }
+                        else{
+                                cout << "Since you didn't buy the property, we will now auction it." << endl;
+                                auction(players);
+                        }
+                }
+                else if (owner==player){
+                        cout << "You own this property, no action is to be taken." << endl;
+                }
+                else{
+                        cout << "The property is owned by " << owner->getName() "." << endl;
+                        payFee(player);
+                }
+
+}
 
 void Gym::buy(Player &player){
         if(!isOwned()){
@@ -116,24 +146,11 @@ void Gym::unmortgage(Player &player){
         }
 }
 
-string Gym::getName(){
-        return name;
-}
-
-int Gym::getPosition(){
-        return position;
-}
-bool Gym::getImprovable(){
-        return improvable;
-}
-bool Gym::getOwnable(){
-        return ownable;
-}
-
 bool Gym::isOwned(){
-        return owned;
+	return owned;
 }
 
 bool Gym::isMortgaged(){
-        return mortgaged;
+	return mortgaged;
 }
+

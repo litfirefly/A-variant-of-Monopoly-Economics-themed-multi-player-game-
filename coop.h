@@ -9,12 +9,10 @@ class Coop : public Square {
   const static int payMoney = 150;
 
  public:
-        Coop(std::string &name, int position);
-        void payBack(Player &player);
-	string getName();
-        int getPosition();
-        bool getImprovable();
-        bool getOwnable();
+        Coop(std::shared_ptr<Board> board,std::string &name, int position);
+        virtual void action(Player &player, vector<shared_ptr<Player>> otherPlayers) override;
+	void payBack(Player &player, vector<shared_ptr<Player>> otherPlayers);
 };
 
 #endif
+

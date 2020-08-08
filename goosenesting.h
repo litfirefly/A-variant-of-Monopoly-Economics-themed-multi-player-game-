@@ -7,12 +7,9 @@
 
 class GooseNesting : public Square {
  public:
-        GooseNesting(std::string &name, int position);
-        void displayGeese(Player &player);
-	string getName();
-        int getPosition();
-        bool getImprovable();
-        bool getOwnable();
+        GooseNesting(std::shared_ptr<Board> board,std::string &name, int position);
+        virtual void action(Player &player) override;
 };
 
 #endif
+

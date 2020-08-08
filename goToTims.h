@@ -7,12 +7,9 @@
 
 class GoToTims : public Square {  
 public:    
-	GoToTims(std::string &name, int position);  
-	void moveToJail(Player &player);
-	string getName();
-        int getPosition();
-        bool getImprovable();
-        bool getOwnable(); 
+	GoToTims(std::shared_ptr<Board> board,std::string &name, int position);  
+	virtual void action(Player &player) override;
 };
 
 #endif
+

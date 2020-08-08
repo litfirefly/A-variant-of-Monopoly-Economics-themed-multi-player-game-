@@ -4,22 +4,10 @@
 #include <vector>
 using namespace std;
 
-GooseNesting::GooseNesting(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {} 
 
-void GooseNesting::displayGeese(Player &player){
+GooseNesting::GooseNesting(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+
+void GooseNesting::action(Player &player){
 	cout << "A flock geese is attacking. Take cover!" << endl;
 }
 
-string GooseNesting::getName(){
-	        return name;
-}
-
-int GooseNesting::getPosition(){
-	        return position;
-}
-bool GooseNesting::getImprovable(){
-	        return improvable;
-}
-bool GooseNesting::getOwnable(){
-	        return ownable;
-}

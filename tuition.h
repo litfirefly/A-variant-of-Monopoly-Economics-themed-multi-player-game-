@@ -7,12 +7,9 @@
 
 class Tuition : public Square {
  public:
-        Tuition(std::string &name, int position);
-        void payTuition(Player &player);
-	string getName();
-        int getPosition();
-        bool getImprovable();
-        bool getOwnable();
+        Tuition(std::shared_ptr<Board> board,std::string &name, int position);
+        virtual void action(Player &player) override;
 };
 
 #endif
+

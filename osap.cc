@@ -4,22 +4,10 @@
 #include <memory>
 using namespace std;
 
-Osap::Osap(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {}
 
-void Osap::collectMoney(Player &player){
+Osap::Osap(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+void Osap::action(Player &player){
 	player->addMoney(money);
 }
 
-string Osap::getName(){
-        return name;
-}
 
-int Osap::getPosition(){
-        return position;
-}
-bool Osap::getImprovable(){
-        return improvable;
-}
-bool Osap::getOwnable(){
-        return ownable;
-}

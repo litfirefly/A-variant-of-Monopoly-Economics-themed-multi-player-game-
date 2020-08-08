@@ -8,9 +8,10 @@
 #include <time.h>
 using namespace std;
 
-DCTimsLine::DCTimsLine(string &name, int position) : name{name}, position{position}, monopolyBlock{""}, ownable{false}, improvable{false} {}
 
-void DCTimsLine::option(Player &player){
+DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+
+void DCTimsLine::action(Player &player){
 	while(true){
 		cout << "Enter 'roll' to roll the die, 'pay' to pay the jail fee, or 'up' to use your Roll Up card" << endl;
 		string playTurn;
@@ -85,16 +86,4 @@ void DCTimsLine::useRollUp(Player &player){
 	player->jailTurns = -1;
 }
 
-string DCTimsLine::getName(){
-        return name;
-}
 
-int DCTimsLine::getPosition(){
-        return position;
-}
-bool DCTimsLine::getImprovable(){
-        return improvable;
-}
-bool DCTimsLine::getOwnable(){
-        return ownable;
-}
