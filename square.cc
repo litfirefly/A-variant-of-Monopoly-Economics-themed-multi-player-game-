@@ -1,7 +1,7 @@
 #include "square.h"
  
-::xSquare::Square(std::string name, std::string monopolyBlock, int position, int cost, string owner, int improvement_level, bool ownable, bool improvable):
-	name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{owner}, improvement_level{improvement_level}, improvable{improvable}{}
+Square::Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, string owner, int improvement_level, bool ownable, bool improvable):
+	board{board}, name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{owner}, improvement_level{improvement_level}, improvable{improvable}{}
 
 std::string Square::getName(){
 	return name;

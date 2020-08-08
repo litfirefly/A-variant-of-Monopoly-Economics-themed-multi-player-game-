@@ -6,11 +6,10 @@
 #include "square.h"
 
 class NeedlesHall : public Square {
-  static int rollUpCards = 0;
 
  public:
-        NeedlesHall(std::string &name, int position);
-        void getNeedlesHallEffect(Player &player);
+        NeedlesHall(std::shared_ptr<Board> board,std::string &name, int position);
+        virtual void action(Player &player) override;
 };
 
 #endif

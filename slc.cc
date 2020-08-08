@@ -8,7 +8,7 @@
 #include <time.h>
 using namespace std;
 
-SLC::SLC(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+SLC::SLC(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
 void SLC::getSLCEffect(Player &player){
 	srand (time(NULL)); 

@@ -8,8 +8,8 @@
 class DCTimsLine : public Square {
 	const int jailFee = 50;
 public:
-        DCTimsLine(std::string &name, int position);
-        void option(Player &player);
+        DCTimsLine(std::shared_ptr<Board> board,std::string &name, int position);
+        virtual void action(Player &player) override;
 	void rollDice(Player &player);
 	void payJailFee(Player &player);
 	void useRollUp(Player &player);

@@ -11,18 +11,43 @@ vector<int> tuition;
 bool owned;
 bool mortgaged;
 	
-AcademicProperty::AcademicProperty(std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
-		  int improvementCost, vector<int> tuition, bool mortgaged): Square{name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
+AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
+		  int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
 									     improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
 		if(owner){
 			owned=true;
 		}	
 }
-  
+
+
+void AcademicProperty::action(Player &player){
+		cout << "You have landed on " << name "." << endl;
+		if (owner==nullptr){
+			cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
+			string line = "";
+			cin >> line;
+			if (line=="buy"){
+				buy(player);
+				cout << "You bought this property for " << cost << endl;
+			}
+			else{
+				cout << "Since you didn't buy the property, we will now auction it." << endl;
+				auction(players);
+			}
+		}
+		else if (owner==player){
+			cout << "You own this property, no action is to be taken." << endl;
+		}
+		else{
+			cout << "The property is owned by " << owner->getName() ". The tuition is currently " << tuition[improvement_level] << "." << endl;
+			payTuition(player);
+		}
+}
+
 void AcademicProperty::buy(Player &player){
         if(!isOwned()){
                 if(player->money - price >= 0){
-                        player->subtractMoney(price);
+                        player->subtractMoney(cost);
                         owned = true;
                         mortgaged = false;
                         owner = player;

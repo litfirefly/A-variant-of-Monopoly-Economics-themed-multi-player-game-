@@ -19,6 +19,8 @@ class Player{
 public:
 	Player(char piece, std::string name);
 	int getMoney();
+	std::string getName();
+	int getPosition();
 	int getWorth(player);
 	void printPlayerAssets();
 	void transferMoney(std::shared_ptr<Player> to, int amount);

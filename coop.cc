@@ -5,8 +5,11 @@
 using namespace std;  
 
 
-Coop::Coop(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+Coop::Coop(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
+void Coop::action(Player &player, vector<shared_ptr<Player>> otherPlayers){
+	payBack(player, otherPlayers);
+}
 void Coop::payBack(Player &player, vector<shared_ptr<Player>> otherPlayers){
 	player->subtractMoney(payMoney, otherPlayers);
 }

@@ -11,7 +11,8 @@ class Residences : public Square{
   bool owned;
   bool mortgaged;
  public:
-  Residences(std::string &name, int position, shared_ptr<Player> owner, bool mortgaged);
+  Residences(std::shared_ptr<Board> board,std::string &name, int position, shared_ptr<Player> owner, bool mortgaged);
+  virtual void action(shared_ptr<Player> player) override;
   void buy(Player &player);
   void payRent(Player &player);
   void auction(vector<shared_ptr<Player>> players);

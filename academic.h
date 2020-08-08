@@ -11,10 +11,10 @@ class AcademicProperty: public Square {
   	int auctionner(vector<shared_ptr<Player>> &players, int index, int auctioneers, int currBid, vector<bool> &withdraw);
 	
 public:
-  AcademicProperty(std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
+  AcademicProperty(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
 		  int improvementCost, vector<int> tuition, bool mortgaged)
 
-     
+  virtual void action(Player &player);
   void buy(Player &player);
   void auction(vector<shared_ptr<Player>> player);
   void improveBuy(Player& player);

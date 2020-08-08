@@ -7,11 +7,35 @@
 using namespace std;
 
 
-Residences::Residences(std::string name, int position, shared_ptr<Player> owner, bool mortgaged): Square{name, "", position, price, owner, improvement_level, true, false}, 
+Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): Square{board, name, "", position, price, owner, improvement_level, true, false}, 
 	owned{false}, mortgaged{mortgaged} {
 		if(owner){
 			owned=true;
 		}	
+}
+
+void Residences::action(Player &player){
+                cout << "You have landed on " << name "." << endl;
+                if (owner==nullptr){
+                        cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
+                        string line = "";
+                        cin >> line;
+                        if (line=="buy"){
+                                buy(player);
+                                cout << "You bought this property for " << cost << endl;
+                        }
+                        else{
+                                cout << "Since you didn't buy the property, we will now auction it." << endl;
+                                auction(players);
+                        }
+                }
+                else if (owner==player){
+                        cout << "You own this property, no action is to be taken." << endl;
+                }
+                else{
+                        cout << "The property is owned by " << owner->getName() "." << endl;
+                        payRent(player);
+                }
 }
 
 void Residences::buy(Player &player){

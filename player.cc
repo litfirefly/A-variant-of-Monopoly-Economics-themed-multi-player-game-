@@ -44,6 +44,14 @@ int Player::getMoney(){
 	return money;
 }
 
+string Player::getName(){
+	return name;
+}
+
+int Player::getPosition(){
+	return position;
+}
+
 int Player::getWorth(){
 	int property_worth = 0;
 	for (int i=0; i<squaresOwned; i++){

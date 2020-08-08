@@ -9,9 +9,9 @@
 using namespace std;
 
 
-DCTimsLine::DCTimsLine(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
 
-void DCTimsLine::option(Player &player){
+void DCTimsLine::action(Player &player){
 	while(true){
 		cout << "Enter 'roll' to roll the die, 'pay' to pay the jail fee, or 'up' to use your Roll Up card" << endl;
 		string playTurn;

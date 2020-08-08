@@ -8,9 +8,9 @@
 #include <time.h>
 using namespace std;
 
-NeedlesHall::NeedlesHall(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string &name, int position) : Square{board, "", position, -1, nullptr, -1, false, false} {}
 
-void NeedlesHall::getNeedlesHallEffect(Player &player){
+void NeedlesHall::action(Player &player){
         srand (time(NULL));
         int val = rand() % 100 + 1;
         if(val == 100 && rollUpCards != 4){

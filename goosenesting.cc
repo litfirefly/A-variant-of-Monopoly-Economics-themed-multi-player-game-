@@ -5,9 +5,9 @@
 using namespace std;
 
 
-GooseNesting::GooseNesting(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+GooseNesting::GooseNesting(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
-void GooseNesting::displayGeese(Player &player){
+void GooseNesting::action(Player &player){
 	cout << "A flock geese is attacking. Take cover!" << endl;
 }
 

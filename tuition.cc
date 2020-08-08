@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-Tuition::Tuition(string &name, int position) : Square{name, "", position, -1, nullptr, -1, false, false} {}
+Tuition::Tuition(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
 void Tuition::payTuition(Player &player){
 	int 10percent = player->getWorth() * 0.1;
@@ -29,6 +29,6 @@ void Tuition::payTuition(Player &player){
 			continue;
 		}
 		break;
-}
+	}
 
 }
