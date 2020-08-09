@@ -20,7 +20,11 @@ bool Residences::isGym(){
 }
 
 void Residences::action(shared_ptr<Player> player){
-                cout << "You have landed on " << getName() << "." << endl;
+		if (getImprovementLevel()==-1){
+			mortgaged=true;
+		}
+                
+		cout << "You have landed on " << getName() << "." << endl;
                 if (getOwner()==nullptr){
                         cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
                         string line = "";
@@ -43,6 +47,9 @@ void Residences::action(shared_ptr<Player> player){
 }
 
 void Residences::buy(shared_ptr<Player> player, int price){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
 	if(!isOwned()){
 		if(player->getMoney() - price >= 0){
 			player->subtractMoney(price, getBoard()->getPlayers());
@@ -62,6 +69,9 @@ void Residences::buy(shared_ptr<Player> player, int price){
 }
 
 void Residences::payRent(shared_ptr<Player> tenant){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
 	if(isOwned() && !isMortgaged() && tenant->getName() == getOwner()->getName()){
 		int subMoney = 0;
 		int res = getOwner()->getResNum();
@@ -147,15 +157,20 @@ void Residences::mortgage(shared_ptr<Player> player){
 	if(!mortgaged){
 		player->addMoney(res_price / 2);
 		mortgaged = true;
+		setImprovementLevel(-1);
 	}
 }
 
 void Residences::unmortgage(shared_ptr<Player> player){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
 	if(mortgaged){
 		int subMoney = (res_price / 2) + (res_price * 0.1);
 		if(player->getMoney() - subMoney >= 0){
 			player->subtractMoney(subMoney, getBoard()->getPlayers());
 			mortgaged = false;
+			setImprovementLevel(0);
 		}
 		else{
 			cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
@@ -168,5 +183,8 @@ bool Residences::isOwned(){
 }
 
 bool Residences::isMortgaged(){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
 	return mortgaged;
 }

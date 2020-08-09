@@ -6,18 +6,16 @@
 #include <fstream>
 using namespace std;
 
-TextDisplay::TextDisplay(vector<shared_ptr<Square>> textdisplay): squares{squares} {
+TextDisplay::TextDisplay(shared_ptr<Board> game): game{game} {
 	ifstream board_text("board.txt");
 	string line;
-	int row=0;
-	while (getline(board_text,line)){
-		char c;
-		int col=0;
-		while (board_text.get(c)){
-			board[row][col]=c;
-			col++;
+	while (getline(board_text, line)){
+		vector<char> row;
+		int string_size = line.length();
+		for (int i=0; i<string_size; i++){
+			row.push_back(line[i]);
 		}
-		row++;
+		board.push_back(row);
 	}
 }
 
@@ -30,94 +28,101 @@ void TextDisplay::notify( Subject & whoNotified){
 void TextDisplay::notify(){}
 
 void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
-		int row = (rown+1)*10;
-		int col = (coln+1)*10;
+		int row = (rown*6)+1;
+		int col = (coln*9);
+		
 		if (square->getOwner()!=nullptr){
 			//O:79
-			//::58
-			board[row-3][col-9]=79;
-			board[row-3][col-8]=58;
-			board[row-3][col-7]=square->getOwner()->getPiece();
+			//::58	
+			board[row+3][col+1]=79;
+			board[row+3][col+2]=58;
+			board[row+3][col+3]=square->getOwner()->getPiece();
 		}
 		else{
-			// 32
-			board[row-3][col-9]=32;
-			board[row-3][col-8]=32;
-			board[row-3][col-7]=32;
+			board[row+3][col+1]=32;
+			board[row+3][col+2]=32;
+			board[row+3][col+3]=32;
 		}
 		
+		board[row+3][col+4]=32;
 		if (square->getImprovementLevel()>0){
 			//I:73
 			//V:86
 			if (square->getImprovementLevel()==1){
-				board[row-3][col-6]=73;
+				board[row-3][col+5]=73;
+				board[row+3][col+6]=32;
+				board[row+3][col+7]=32;
 			}
 			else if (square->getImprovementLevel()==1){
-				board[row-3][col-6]=73;
-				board[row-3][col-5]=73;
+				board[row+3][col+5]=73;
+				board[row+3][col+6]=73;
+				board[row+3][col+7]=32;
 			}
 			else if (square->getImprovementLevel()==1){
-				board[row-3][col-6]=73;
-				board[row-3][col-5]=73;
-				board[row-3][col-4]=73;
+				board[row+3][col+5]=73;
+				board[row+3][col+6]=73;
+				board[row+3][col+7]=73;
 			}
 			else if (square->getImprovementLevel()==4){
-				board[row-3][col-6]=73;
-				board[row-3][col-5]=86;
+				board[row+3][col+5]=73;
+				board[row+3][col+6]=86;
+				board[row+3][col+7]=32;
 			}
 			else if (square->getImprovementLevel()>4){
-				board[row-3][col-6]=86;
+				board[row+3][col+5]=86;
+				board[row+3][col+6]=32;
+				board[row+3][col+7]=32;
 			}
+		}
+		else{
+				board[row+3][col+5]=32;
+				board[row+3][col+6]=32;
+				board[row+3][col+7]=32;
 		}
 		if (square->isOwnable() && square->isMortgaged()){
 			//M: 77
-			board[row-3][col-2] = 77;
+			board[row+3][col+8] = 77;
 		}
+	
 		int count=0;
+		auto players = game->getPlayers();
 		int playerssize = players.size();
 		for (int i=0; i<playerssize; i++){
 			if (players[i]->getPosition()==square->getPosition()){
-				board[row-2][col-9+count]=players[i]->getPiece();
+				board[row+4][col+1+count]=players[i]->getPiece();
 				count++;
 			}
 		}
+		for (int i=count; i<9;i++){
+			board[row+4][col+1+count]=32;
+		}
 }
 void TextDisplay::print(){
-	vector<vector<char>> board;
-	ifstream board_text("board.txt");
-	string line;
-	int row=0;
-	while (getline(board_text,line)){
-		char c;
-		int col=0;
-		while (board_text.get(c)){
-			board[row][col]=c;
-			col++;
-		}
-		row++;
-	}
-	int sidel = squares.size()/4;
+	auto squares = game->getSquares();
 	
-	//botRows
-	for (int i=0; i<sidel; i++){
-		updateSquare(squares[i], 9, 9-i);	
+	for (int i=0; i<=10; i++){
+		updateSquare(squares[i], 10, 10-i);	
 	}
-
-	//colRows
-	for (int i=0; i<sidel-2; i++){
-		updateSquare(squares[sidel+i], 8-i, 0);
-		updateSquare(squares[39-i], 8-i, 9);
+	cout << "HERE" << endl;
+	for (int i=11; i<=20; i++){
+		updateSquare(squares[i], 20-i, 0);
 	}
+	cout << "HERE" << endl;
+	for (int i=21; i<=31; i++){
+		updateSquare(squares[i], 0, i-21);
+	}
+	cout << "HERE" << endl;
+	for (int i=30; i<=39; i++){
+		updateSquare(squares[i], i-30, 10);
+	}
+	cout << "HERE" << endl;
 	
-	//TopRow
-	for (int i=0; i<sidel; i++){
-		updateSquare(squares[19+i],0,i);
-	}
+	
 	int numrows = board.size();
 	for (int i=0; i<numrows; i++){
 		int numcols = board[i].size();
 		for (int j=0; j<numcols; j++){
-			cout<<board[i][j]<<endl;
+			cout<<board[i][j];
 		}
 		cout << endl;
 	}

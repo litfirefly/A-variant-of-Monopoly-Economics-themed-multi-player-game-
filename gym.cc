@@ -16,6 +16,9 @@ Gym::Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr
 }
 
 void Gym::action(shared_ptr<Player> player){
+		if (getImprovementLevel()==-1){
+			mortgaged=true;
+		}
                 cout << "You have landed on " << getName() << "." << endl;
                 if (getOwner()==nullptr){
                         cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
@@ -42,6 +45,9 @@ bool Gym::isGym(){
 	return gym;
 }
 void Gym::buy(shared_ptr<Player> player, int price){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
         if(!isOwned()){
                 if(player->getMoney() - price >= 0){
                         player->subtractMoney(price, getBoard()->getPlayers());
@@ -62,6 +68,9 @@ void Gym::buy(shared_ptr<Player> player, int price){
 }
 
 void Gym::payFee(shared_ptr<Player> tenant){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
         if(owned && !mortgaged){
                 int subMoneyTimes = 0;
 		
@@ -149,15 +158,20 @@ void Gym::mortgage(shared_ptr<Player> player){
         if(!mortgaged){
                 player->addMoney(gym_price / 2);
                 mortgaged = true;
-        }
+        	setImprovementLevel(-1);
+	}
 }
 
 void Gym::unmortgage(shared_ptr<Player> player){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
         if(mortgaged){
                 int subMoney = (gym_price / 2) + (gym_price * 0.1);
                 if(player->getMoney() - subMoney >= 0){
                         player->subtractMoney(subMoney, getBoard()->getPlayers());
                         mortgaged = false;
+			setImprovementLevel(0);
                 }
                 else{
                         cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
@@ -170,6 +184,9 @@ bool Gym::isOwned(){
 }
 
 bool Gym::isMortgaged(){
+	if (getImprovementLevel()==-1){
+		mortgaged=true;
+	}
 	return mortgaged;
 }
 

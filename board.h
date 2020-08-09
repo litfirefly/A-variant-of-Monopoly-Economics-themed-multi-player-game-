@@ -9,16 +9,17 @@
 
 class Square;
 class Player;
+class TextDisplay;
 class Board : public std::enable_shared_from_this<Board>{
 	const int maxNumOfPlayers = 8;
   	int numOfPlayers;
 	int rollUpCards=0;
 	std::vector<std::shared_ptr<Player>> playerList;
 	std::vector<std::shared_ptr<Square>> squares;
-	const std::vector<std::string> pieces = {"G", "B", "D", "P", "S", "$", "L", "T"};
+	const std::vector<std::string> pieces = {"G: Goose", "B: GRT Bus ", "D: Tim Hortons Doughnut", "P: Professor", "S: Student", "$: Money", "L: Laptop", "T: Pink Tie"};
 	std::vector<bool> piecesChosen;
 	bool testMode = false;
-
+	std::shared_ptr<TextDisplay> td;
 	const std::vector<int> AL = {2, 10, 30, 90, 160, 250};
 	const std::vector<int> ML = {4, 20, 60, 180, 320, 450};
 	const std::vector<int> ECH = {6, 30, 90, 270, 400, 550};
@@ -42,13 +43,15 @@ class Board : public std::enable_shared_from_this<Board>{
 	const std::vector<int> MC = {35, 175, 500, 1100, 1300, 1500};
 	const std::vector<int> DC = {50, 200, 600, 1400, 1700, 2000};
 	
-	void trade(std::vector<std::string> command);
+	void trade(std::vector<std::string> command, int currPlayer);
+	void displayOption(std::shared_ptr<Player> player);
+	void initSquares();
   public:
         void initialize(int numOfPlayers);
 	void setTesting();
 	void playTurn();
-	void loadGame(std::string load);
-	std::string saveGame();
+	void loadGame(std::string file);
+	void saveGame(std::string file);
 	std::vector<int> rollDice(int d1, int d2);
 	std::vector<std::shared_ptr<Player>> getPlayers();
 	std::vector<std::shared_ptr<Square>> getSquares();
