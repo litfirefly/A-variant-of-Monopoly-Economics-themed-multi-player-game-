@@ -5,29 +5,28 @@
 
 class AcademicProperty: public Square {
 	int improvementCost;
-	vector<int> tuition;
+	std::vector<int> tuition;
 	bool owned;
 	bool mortgaged;
-  	int auctionner(vector<shared_ptr<Player>> &players, int index, int auctioneers, int currBid, vector<bool> &withdraw);
 	
 public:
-  AcademicProperty(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
-		  int improvementCost, vector<int> tuition, bool mortgaged)
+  AcademicProperty(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, int improvement_level, 
+		  int improvementCost, std::vector<int> tuition, bool mortgaged);
 
-  virtual void action(Player &player);
-  void buy(Player &player);
-  void auction(vector<shared_ptr<Player>> player);
-  void improveBuy(Player& player);
-  void improveSell(Player& player);
-  void payTuition(Player& tenant);
-  void unmortgage(Player& player);
-  void mortgage(Player& player);
+  virtual void action(std::shared_ptr<Player> player);
+  void buy(std::shared_ptr<Player> player, int price);
+  void auction();
+  virtual void improveBuy(std::shared_ptr<Player> player);
+  virtual void improveSell(std::shared_ptr<Player> player);
+  void payTuition(std::shared_ptr<Player> tenant);
+  virtual void unmortgage(std::shared_ptr<Player> player);
+  virtual void mortgage(std::shared_ptr<Player> player) override;
 
-  
+  virtual int getValue() override; 
   int getImprovementCost(); 
-  vector<int> getTuition(); 
+  std::vector<int> getTuition(); 
   bool isOwned();  
-  bool isMortaged();
+  virtual bool isMortgaged() override;
   bool isMonopolyBlockValid();
 };
 

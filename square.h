@@ -1,36 +1,44 @@
 #ifndef _SQUARE_H_
 #define _SQUARE_H_
-#include "player.h"
 #include "board.h"
 #include <string>
 #include <vector>
 #include <memory>
-
+class Player;
+class Board;
 class Square{
-	std::shared_ptr<Board> board;
-	static int rollUpCards = 0;
-	static int gymsOwned = 0;
+	std::shared_ptr<Board> board;	
 	std::string name;
 	std::string monopolyBlock;	
 	int position;
 	int cost;
-	shared_ptr<Player> owner;
+	std::shared_ptr<Player> owner;
 	int improvement_level;	
 	bool ownable;
 	bool improvable;
  public:
-  Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, bool ownable, bool improvable);
+  Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, 
+		  int position, int cost, std::shared_ptr<Player> owner, int improvement_level, bool ownable, bool improvable);
   std::string getName();
   std::string getMonopolyBlock();
   int getPosition();
   int getCost();
-  shared_ptr<Player> getOwner();
+  std::shared_ptr<Board> getBoard();
+  virtual int getValue();
+  std::shared_ptr<Player> getOwner();
+  void setOwner(std::shared_ptr<Player> player);
   int getImprovementLevel();
-  bool getOwnable();
-  bool getImprovable();
-  virtual action(shared_ptr<Player> player);
-  virtual ~Square()=0;
-  
+  bool isOwnable();
+  bool isImprovable();
+  void setImprovementLevel(int level);
+  virtual bool isGym();
+  virtual bool isMortgaged();
+  virtual void mortgage(std::shared_ptr<Player> player);
+  virtual void unmortgage(std::shared_ptr<Player> player);
+  virtual void improveBuy(std::shared_ptr<Player> player);
+  virtual void improveSell(std::shared_ptr<Player> player);
+  virtual void action(std::shared_ptr<Player> player);
+  virtual void auction();
 };
 
 #endif

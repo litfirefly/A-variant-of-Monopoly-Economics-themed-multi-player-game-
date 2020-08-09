@@ -8,14 +8,14 @@
 #include <time.h>
 using namespace std;
 
-SLC::SLC(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+SLC::SLC(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
-void SLC::getSLCEffect(Player &player){
+void SLC::action(shared_ptr<Player> player){
 	srand (time(NULL)); 
 	int val = rand() % 100 + 1;
-	if(val == 100 && rollUpCards != 4){
-		player->rollUp++;
-		rollUpCards++;
+	if(val == 100 && getBoard()->getRollUpCards()!= 4){
+		player->addTimCup();
+		getBoard()->setRollUpCards(getBoard()->getRollUpCards()+1);
 	}
 	else{
 		val = rand() % 1000 + 1;
@@ -44,12 +44,10 @@ void SLC::getSLCEffect(Player &player){
 			player->move(3);
 		} 
 		else if(val >= 916 && val < 958){  
-			// go to dc tims line
-			player->move(-200);
+			player->setPosition(getBoard()->getSquares()[9]->getPosition());	
 		}
 		else{
-			// advance to collect osap
-			player->move(200);
+			player->setPosition(getBoard()->getSquares()[0]->getPosition());	
 		}
 	}
 }

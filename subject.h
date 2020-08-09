@@ -1,7 +1,6 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 #include <vector>
-#include "info.h"
 
 // DO NOT MODIFY THIS FILE!
 
@@ -13,7 +12,6 @@ class Subject {
   public:
     void attach(Observer *o);  
     void notifyObservers();
-    virtual Info getInfo() const = 0;
 };
 
 #endif

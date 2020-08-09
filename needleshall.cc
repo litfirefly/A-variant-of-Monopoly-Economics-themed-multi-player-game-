@@ -8,26 +8,26 @@
 #include <time.h>
 using namespace std;
 
-NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string &name, int position) : Square{board, "", position, -1, nullptr, -1, false, false} {}
+NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string name, int position) : Square{board,name, "", position, -1, nullptr, -1, false, false} {}
 
-void NeedlesHall::action(Player &player){
+void NeedlesHall::action(shared_ptr<Player> player){
         srand (time(NULL));
         int val = rand() % 100 + 1;
-        if(val == 100 && rollUpCards != 4){
-                player->rollUp++;
-                rollUpCards++;
+        if(val == 100 && getBoard()->getRollUpCards() != 4){
+                player->addTimCup();
+		getBoard()->setRollUpCards(getBoard()->getRollUpCards()+1);
         }
         else{
                 val = rand() % 100 + 1;
 
                 if(val >= 1 && val < 5){
-                        player->subtractMoney(200);
+                        player->subtractMoney(200, getBoard()->getPlayers());
                 }
                 else if(val >= 5 && val < 16){
-                        player->subtractMoney(100);
+                        player->subtractMoney(100, getBoard()->getPlayers());
                 }
                 else if(val >= 16 && val < 33){
-                        player->subtractMoney(50);
+                        player->subtractMoney(50, getBoard()->getPlayers());
                 }
                 else if(val >= 33 && val < 66){
                         player->addMoney(25);
@@ -44,6 +44,6 @@ void NeedlesHall::action(Player &player){
 	}
 }
 
-}
+
 
 

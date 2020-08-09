@@ -7,15 +7,14 @@
 #include "observer.h"
 #include "square.h"
 
-class Cell;
 
 class TextDisplay: public Observer {
 	    std::vector<std::shared_ptr<Square>> squares;
 	    std::vector<std::shared_ptr<Player>> players;
-	    vector<vector<char>> board;
-    	    void updateSquare(int row, int col);
+	    std::vector<std::vector<char>> board;
+    	    void updateSquare(std::shared_ptr<Square>, int row, int col);
  public:
-    explicit TextDisplay(std::vector<std::vector<Square>> textdisplay);
+    explicit TextDisplay(std::vector<std::shared_ptr<Square>> squares);
     virtual void notify( Subject & whoNotified ) override;
     virtual void notify() override;
     void print();

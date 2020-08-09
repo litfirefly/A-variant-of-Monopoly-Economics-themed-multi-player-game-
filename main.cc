@@ -2,16 +2,17 @@
 #include "board.h"
 using namespace std;
 
-int main(){
+int main(int argc, char* argv[]){
 	cout << "Welcome to Watopoly" << endl;	
 	Board game;
 	string load_file = "";
 	bool testing = false;
 	for (int i=0; i < argc; i++){
-		if (argv[i]=="-testing"){
+		string command = argv[i];
+		if (command=="-testing"){
 			testing=true;
 		}
-		else if (argv[i]=="-load"){
+		else if (command=="-load"){
 			if ((i+1)<argc){
 				load_file = argv[i+1];
 			}

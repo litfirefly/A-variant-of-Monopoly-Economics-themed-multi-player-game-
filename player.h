@@ -5,30 +5,49 @@
 #include <string>
 #include <vector>
 #include <memory>
-class Player{
+class Square;
+
+class Player : public std::enable_shared_from_this<Player>{
 	char piece;
 	std::string name;
 	int position;
 	bool inJail;
 	int jailTurns;
-	bool isBankrupt;
+	bool bankrupt;
 	int money;
 	int numOfResidences;
 	int numOfGyms;
+	int timCups;
 	std::vector<std::shared_ptr<Square>> squaresOwned;
 public:
-	Player(char piece, std::string name);
+	Player(char piece, std::string name, int money, int position, int timCups);
+	std::vector<std::shared_ptr<Square>> getSquares();
 	int getMoney();
 	std::string getName();
+	char getPiece();
 	int getPosition();
-	int getWorth(player);
+	int getWorth();
+	int getTimCups();
+	int getGymNum();
+	void addGym();
+	void setGymNum(int num);
+	int getResNum();
+	void setPosition(int pos);
+	void addResNum();
+	bool isBankrupt();
+	int getJailTurns();
+	void setJailTurns(int jt);
+	bool isInJail();
+	void setJail(bool jail);
+	void addTimCup();
+	void useTimCup();
 	void printPlayerAssets();
-	void transferMoney(std::shared_ptr<Player> to, int amount);
-	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<int>);
+	void transferMoney(std::shared_ptr<Player> to, int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
+	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<Square> square);
 	void addSquare(std::shared_ptr<Square>);
 	void addMoney(int amount);
-	void subtractMoney(int amount);
-	void move(position);
+	void subtractMoney(int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
+	void move(int position);
 	
 };
 

@@ -3,27 +3,26 @@
 #include <string>
 #include <vector>
 #include <memory>
-using namespace std;
-
+#include "square.h"
 class Gym : public Square{
  private:
-  static int price = 150;
+  static const int gym_price = 150;
  
   int improvementCost;
-  vector<int> tuition;
+  std::vector<int> tuition;
+  bool gym = true;
   bool owned;
-  bool mortgaged;
-  int auctionner(vector<shared_ptr<Player>> &players, int index, int auctioneers, int currBid, vector<bool> &withdraw);
-	
+  bool mortgaged;	
  public:
-  Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged);
+  Gym(std::shared_ptr<Board> board,std::string name, int position,  std::shared_ptr<Player> owner, bool mortgaged);
  
-  virtual void action(shared_ptr<Player> player) override; 
-  void buy(Player &player);
-  void payFee(Player &player);
-  void auction(vector<shared_ptr<Player>> players);
-  void mortgage(Player &player);
-  void unmortgage(Player &player);
+  virtual void action(std::shared_ptr<Player> player) override; 
+  virtual bool isGym() override;
+  void buy(std::shared_ptr<Player> player, int price);
+  void payFee(std::shared_ptr<Player> player);
+  void auction();
+  void mortgage(std::shared_ptr<Player> player);
+  void unmortgage(std::shared_ptr<Player> player);
   
   bool isOwned();
   bool isMortgaged();

@@ -8,8 +8,8 @@
 class SLC : public Square {
 
  public:
-        SLC(std::shared_ptr<Board> board,std::string &name, int position);
-        virtual void action(Player &player) override;
+        SLC(std::shared_ptr<Board> board,std::string name, int position);
+        virtual void action(std::shared_ptr<Player> player) override;
 };
 
 #endif

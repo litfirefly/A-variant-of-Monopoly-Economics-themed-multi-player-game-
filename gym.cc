@@ -8,140 +8,159 @@
 #include <time.h>
 using namespace std;
 
-Gym::Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): Square{board, name, "", position, price, owner, improvement_level, true, false}, 
-	owned{false}, mortgaged{mortgaged} {
+Gym::Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): 
+	Square{board, name, "", position, gym_price, owner,0, true, false}, owned{false}, mortgaged{mortgaged} {
 		if(owner){
 			owned=true;
 		}	
 }
 
-void Gym::action(Player &player){
-                cout << "You have landed on " << name "." << endl;
-                if (owner==nullptr){
+void Gym::action(shared_ptr<Player> player){
+                cout << "You have landed on " << getName() << "." << endl;
+                if (getOwner()==nullptr){
                         cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
                         string line = "";
                         cin >> line;
                         if (line=="buy"){
-                                buy(player);
-                                cout << "You bought this property for " << cost << endl;
+                                buy(player, getCost());
                         }
                         else{
                                 cout << "Since you didn't buy the property, we will now auction it." << endl;
-                                auction(players);
+                                auction();
                         }
                 }
-                else if (owner==player){
+                else if (getOwner()==player){
                         cout << "You own this property, no action is to be taken." << endl;
                 }
                 else{
-                        cout << "The property is owned by " << owner->getName() "." << endl;
+                        cout << "The property is owned by " << getOwner()->getName() <<  "." << endl;
                         payFee(player);
                 }
 
 }
-
-void Gym::buy(Player &player){
+bool Gym::isGym(){
+	return gym;
+}
+void Gym::buy(shared_ptr<Player> player, int price){
         if(!isOwned()){
-                if(player->money - price >= 0){
-                        player->subtractMoney(price);
+                if(player->getMoney() - price >= 0){
+                        player->subtractMoney(price, getBoard()->getPlayers());
                         owned = true;
                         mortgaged = false;
-                        owner = player;
-                        player->numOfGyms++;
+                        setOwner(player);
+                        player->addGym();
+			player->addSquare(getBoard()->getSquares()[getPosition()]);
+                        cout << "You bought this property for " << price << endl;
                 }
                 else{
-                        cout << "You do not have enough funds to purchase " << name << "." << endl;
+                        cout << "You do not have enough funds to purchase " << getName() << "." << endl;
                 }
         }
         else{
-                cout << player->name << " owns " << name << "." << endl;
+                cout << player->getName() << " owns " << getName() << "." << endl;
         }
 }
 
-void Gym::payFee(Player &tenant){
+void Gym::payFee(shared_ptr<Player> tenant){
         if(owned && !mortgaged){
                 int subMoneyTimes = 0;
-
+		
 		srand (time(NULL));
 		int die1 = rand() % 6 + 1;
 		int die2 = rand() % 6 + 1;
 		int dieSum = die1 + die2;
 
-                if(owner->numOfGyms == 1)
+                if(getOwner()->getGymNum() == 1)
                         subMoneyTimes = 4;
-                else if(owner->numOfGyms == 2)
-                        subMoney = 10;
+                else if(getOwner()->getGymNum() == 2)
+                        subMoneyTimes = 10;
                 
 		int subMoney = subMoneyTimes * dieSum;
 
-                if(tenant->money - subMoney >= 0){
-                        tenant->subtractMoney(subMoney);
-                        owner->addMoney(subMoney);
-                }
-                else{
-                        // give user options
-                }
+                tenant->subtractMoney(subMoney, getBoard()->getPlayers());
+                if(tenant->isBankrupt()){
+			cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
+			getOwner()->addMoney(tenant->getMoney());
+			vector<shared_ptr<Square>> squares = tenant->getSquares();
+			int numPropertiesTenant = squares.size();
+			for (int i=0; i<numPropertiesTenant; i++){
+				auto square = squares[i];
+				tenant->transferProperty(getOwner(), square);
+			}
+			for (int i=0; i<tenant->getTimCups(); i++){
+				getOwner()->addTimCup();
+			}
+		}
+		else{	
+			getOwner()->addMoney(subMoney);
+		}
         }
 }
 
-void Gym::auction(vector<shared_ptr<Player>> players){
+void Gym::auction(){
+	auto players = getBoard()->getPlayers();
+	int numPlayers = players.size();
         int auctioneers = players.size();
         vector<bool> withdraw;
-        for(int i = 0; i < players.size(); i++){
+        for(int i = 0; i < auctioneers; i++){
                 withdraw.push_back(false);
         }
-        int bid = 0;
-        cout << "The starting bid is: $ " << bid << "." << endl;
-        int index = auctionner(players, auctioneers - auctioneers, auctioneers, bid, withdraw);
-        buy(players[index]);
-}
-
-int Gym::auctionner(vector<shared_ptr<Player>> &players, int index, int auctioneers, int currBid, vector<bool> &withdraw){
-        if(auctioneers == 1){
-                for(int i = 0; i < players.size(); i++){
-                        if(withdraw[i] == false){
-                                return i;
-                        }
-                }
-        }
-        else{
-                string option;
-                cout << "The current bid is: $ " << bid << "." << endl;
-                cout << players[index]->name << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
-                cin << option;
+        int currBid = 0;
+        cout << "The starting bid is: $ " << currBid << "." << endl;
+	int index=0;
+	while (auctioneers!=1){
+	 	string option;
+                cout << "The current bid is: $ " << currBid << "." << endl;
+                cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
+                cin >> option;
                 if(option == "withdraw"){
-                        withdraw[i] = true;
+                        withdraw[index] = true;
                         auctioneers--;
                 }
                 // Excepting the user to enter a higher, positive valid bid than previous user
                 else if(option == "bid"){
+                        int newBid=0;
                         cout << "Enter bid value: " << endl;
-                        cin << currBid;
+                        cin >> newBid;
+                        if (newBid>currBid){
+                                currBid=newBid;
+                        }
+                        else{
+                                cout << "This bid is not higher than the previous bid, your turn will be skipped." << endl;
+                        }
                 }
                 index++;
-                if(index == players.size()){
+                if(index == numPlayers){
                         index = 0;
                 }
-                return auctionner(players, index, auctioneers, currBid, withdraw) + 0;
-        }
+	}
+	int winner = 0;
+	for (int i=0; i<numPlayers; i++){
+		if(!withdraw[i]){
+			winner=i;
+			break;
+		}
+	}	
+        buy(players[winner], currBid);
 }
 
-void Gym::mortgage(Player &player){
+
+void Gym::mortgage(shared_ptr<Player> player){
         if(!mortgaged){
-                player->addMoney(price / 2);
+                player->addMoney(gym_price / 2);
                 mortgaged = true;
         }
 }
 
-void Gym::unmortgage(Player &player){
+void Gym::unmortgage(shared_ptr<Player> player){
         if(mortgaged){
-                int subMoney = (price / 2) + (price * 0.1);
-                if(player->money - subMoney >= 0){
-                        player->subtractMoney(subMoney);
+                int subMoney = (gym_price / 2) + (gym_price * 0.1);
+                if(player->getMoney() - subMoney >= 0){
+                        player->subtractMoney(subMoney, getBoard()->getPlayers());
                         mortgaged = false;
                 }
                 else{
-                        cout << "You do not have enough funds to unmortgage " << name << "." << endl;
+                        cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
                 }
         }
 }

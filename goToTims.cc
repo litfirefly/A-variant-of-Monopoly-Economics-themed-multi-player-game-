@@ -7,12 +7,12 @@
 using namespace std;
 
 
-GoToTims::GoToTims(std::shared_ptr<Board> board,string &name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+GoToTims::GoToTims(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
 
-void GoToTims::action(Player &player, const DCTimsLine &dc){
-	player->position = dc.position;
-	player->inJail = true;
-	player->jainTurns = 0;
+void GoToTims::action(shared_ptr<Player> player){
+	player->setPosition(getBoard()->getSquares()[9]->getPosition());
+	player->setJail(true);
+	player->setJailTurns(0);
 }
 
 
