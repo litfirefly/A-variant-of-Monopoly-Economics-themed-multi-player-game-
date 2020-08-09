@@ -1,7 +1,4 @@
 #include "board.h"
-#include "player.h"
-#include "square.h"
-#include "textdisplay.h"
 #include "academic.h"
 #include "coop.h"
 #include "dcTimsLine.h"
@@ -23,43 +20,62 @@
 using namespace std;
 
 void Board::initialize(int numOfPlayers){
+
 	for(int i = 0; i < maxNumOfPlayers; i++){
-		piecesChosen[i] = false;
+		piecesChosen.push_back(false);
 	}
 	string name;
 	string playerPiece;
 	int i = 0;
 	while(numOfPlayers != 0){
-		cout << "Player " << i << ": Enter your name: ";
-                cin >>  name;
-                cout << "Your options for pieces include: ";
+		while(true){
+			cout << "Player " << i+1 << ": Enter your name: ";
+                	cin>>name;
+			int currPlayers = playerList.size();
+			bool taken=false;
+			for (int i=0; i<currPlayers; i++){
+				if (playerList[i]->getName()==name){
+					cout << "Name already taken." << endl;
+					taken = true;
+					break;
+				}
+			}
+			if(!taken)
+				break;
+
+		}
+		cout << "Your options for pieces include (Type letter): " << endl;;
+
+
                 for(int x = 0; x < maxNumOfPlayers; x++){
                         if(!piecesChosen[x])
                                 cout << "\t" << pieces[x] << endl;
                 }
-                cout << "Choose your piece: ";
-                cin >> playerPiece;
-                int counter = 0;
-		int numOfPieces = pieces.size();
-                for(int y = 0; y < numOfPieces; y++){
-                        if(playerPiece != pieces[y]){
-                                counter++;
-                        }
-                        else if(playerPiece == pieces[y]){
-                                piecesChosen[y] = true;
-                                counter = 0;
-                        }
-                }  
-		if(counter == maxNumOfPlayers){  
-  			cout << "This piece does not exist. Please select one of the available pieces." << endl;
-                }
-                else{
-			char piece_char = playerPiece[0];
-                        auto player = make_shared<Player>(piece_char, name,1500,0,0);
-                        playerList.push_back(player);
-			numOfPlayers--;
-			i++;
-                }
+		while(true){
+                	cout << "Choose your piece: ";
+ 	                cin >> playerPiece;
+        	        int counter = 0;
+			int numOfPieces = pieces.size();
+	                for(int y = 0; y < numOfPieces; y++){
+        	                if(playerPiece[0] != pieces[y][0]){
+                	                counter++;
+                        	}
+     	                   	else if(playerPiece[0] == pieces[y][0]){
+        	                        piecesChosen[y] = true;
+                	                counter = 0;
+                	        }
+               		}  
+			if(counter == maxNumOfPlayers){  
+  				cout << "This piece does not exist. Please select one of the available pieces." << endl;
+                		continue;
+			}
+			break;
+		}
+		char piece_char = playerPiece[0];
+                auto player = make_shared<Player>(piece_char, name,1500,0,0);
+                playerList.push_back(player);
+		numOfPlayers--;
+		i++;        
 	}
 	squares.push_back(make_shared<Osap>(shared_from_this(), "Osap", 0));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "AL", "Arts1", 1, 40, nullptr, 0, 50, AL, false));
@@ -101,6 +117,8 @@ void Board::initialize(int numOfPlayers){
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "MC", "Math", 37, 350, nullptr, 0, 200, MC, false));
 	squares.push_back(make_shared<Coop>(shared_from_this(), "Co-op Fee", 38));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DC", "Math", 39, 400, nullptr, 0, 200, DC, false));
+	string waste;
+	getline(cin,waste);
 }
 
 
@@ -118,22 +136,50 @@ void Board::loadGame(string load){
 
 }
 
-string Board::saveGame(){
+string Board::saveGame(string filename){
 	return "fix";
 }
 
-
+void Board::displayOptions(shared_ptr<Player> player){
+	cout << "It is now " << player->getName() << "'s turn. These are your options: " << endl;
+	if (player->isInJail){
+		cout << "\tNext (will end your turn)" << endl;;
+	}
+	else{
+		if(testMode){
+			cout << "\tRoll <die1> <die2> (will end your turn)"; << endl;
+		}
+		cout << "\tRoll (will end your turn)"; << endl;
+	}
+	cout << "\t trade <name> <property> <money>" << endl;
+	cout << "\t trade <name> <property> <property>" << endl;
+	cout << "\t trade <name> <money> <property>" << endl;
+	cout << "\t improve <property> buy/sell" << endl;
+	cout << "\t mortgage <property>" << endl;
+	cout << "\t unmortgage <property>" << endl;
+	cout << "\t assets" << endl;
+	cout << "\t all" << endl;
+	cout << "\t save <filename>" << endl;
+}
 
 void Board::playTurn(){
 	int currPlayer = 0;
 	string line = "";
-	while(true){
+	bool ended = false;
+	cout << "getready" << endl;
+	diplayOption(playerList[currPlayer]);
+	while(!ended){
+		cout << "Enter Input: " << endl;
+		getline(cin, line);
 		stringstream ss(line);
 		string temp;
 		vector<string> command;
-
+		
 		while (ss >> temp){
 			command.push_back(temp);
+		}
+		if(command.size()<1){
+			continue;
 		}
 		if(command[0] == "roll"){
 			if ((playerList[currPlayer]->isInJail())){
@@ -152,6 +198,7 @@ void Board::playTurn(){
 						roll = rollDice(-1, -1);
 					}
 				}
+				cout << "You rolled " << roll[0] << " and " << roll[1] << "." << endl;
 				totalRoll = roll[0] + roll[1];
 				if(roll[0] != roll[1]){
 					break;
@@ -167,11 +214,12 @@ void Board::playTurn(){
 				}
 			
 			}
-			while(totalRoll > 40){
-				totalRoll -= 40;
+			playerList[currPlayer]->move(totalRoll);
+			while(playerList[currPlayer]->getPosition() > 40){
+				playerList[currPlayer]->move(-40);
 				squares[0]->action(playerList[currPlayer]);
 			}
-			
+			cout << "You landed on: " << squares[playerList[currPlayer]->getPosition()] << endl;
 			squares[playerList[currPlayer]->getPosition()]->action(playerList[currPlayer]);
 		
 		
@@ -184,6 +232,7 @@ void Board::playTurn(){
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+					ended=true;
 				}
 			}
 			
@@ -197,6 +246,7 @@ void Board::playTurn(){
 				currPlayer=0;
 			}
 			cout << "It is now the next player's turn" << endl;
+			diplayOption(playerList[currPlayer]);
 		}		
 		else if(command[0] == "next"){
 			if (!(playerList[currPlayer]->isInJail())){
@@ -216,6 +266,7 @@ void Board::playTurn(){
 				currPlayer=0;
 			}
 			cout << "It is now the next player's turn" << endl;
+			diplayOption(playerList[currPlayer]);
 		}	
 		else if(command[0] == "improve"){
 			string property = command[1];
@@ -281,6 +332,11 @@ void Board::playTurn(){
 		else if (command[0] == "trade"){
 			trade(command);
 		}
+		else if (command[0]=="save"){
+			saveGame(command[1]);
+		}
+		cout << "Enter Input: " << endl;
+		//td->print();
 	}
 }
 
