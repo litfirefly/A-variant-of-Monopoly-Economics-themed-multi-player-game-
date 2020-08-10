@@ -146,7 +146,6 @@ void Board::setTesting(){
 
 
 void Board::trade(vector<string> command, int currPlayer){
-
       if (command.size() == 4) {
 	      int index=-1;
 	      int size = playerList.size();
@@ -163,16 +162,18 @@ void Board::trade(vector<string> command, int currPlayer){
 	      shared_ptr<Player> current = playerList[currPlayer];
 	      shared_ptr<Player> other = playerList[index];
 	      int value=-1;
-	      value = stoi(command[3]);
-	      
+	      try{
+	      	value = stoi(command[3]);
+	      }
+	      catch(exception &err){
+	      }
 	      if (value>-1){
-
 		     vector<shared_ptr<Square>> mySquares = current->getSquares();
 		     int numPropOwned = mySquares.size();
 	             int square_index=-1;
 	      	     string accept="";
 		     for (int i=0; i<numPropOwned; i++){
-			if (mySquares[numPropOwned]->getName()==command[1]){
+			if (mySquares[i]->getName()==command[2]){
 				square_index=i;
 				break;
 			}
@@ -185,10 +186,10 @@ void Board::trade(vector<string> command, int currPlayer){
 				cout<<"The other player doesn't have enough money"<<endl;
 				return;
 		     }
-		     cout << "Does " << command[3] << " accept the trade (type accept to accept)" << endl;
+		     cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
 		     getline(cin,accept);
 		     if (accept!="accept"){
-			cout << command[3] << " has not accepted." << endl;
+			cout << command[1] << " has not accepted." << endl;
 			return;
 		     }
 		    current->transferProperty(other, mySquares[square_index]);
@@ -197,9 +198,12 @@ void Board::trade(vector<string> command, int currPlayer){
 	      		
 		    return;
 	      }
-
-	      value = stoi(command[2]);
-		
+	      value=-1;
+	      try{
+	       value = stoi(command[2]);
+	      }
+      	      catch(exception &err){}
+	      	      
       	      if (value>-1){
                      
 		     vector<shared_ptr<Square>> otherSquares = other->getSquares();
@@ -208,23 +212,23 @@ void Board::trade(vector<string> command, int currPlayer){
 	      	     string accept="";
 		     
 		     for (int i=0; i<numPropOwned; i++){
-                        if (otherSquares[numPropOwned]->getName()==command[2]){
+                        if (otherSquares[i]->getName()==command[3]){
                                 square_index=i;
                                 break;
                         }
                      }
                      if (square_index==-1){
-                                cout<< command[3] << " doesn't own this square." <<endl;
+                                cout<< command[1] << " doesn't own this square." <<endl;
                                 return;
                      }
                      if (current->getMoney()<value){
                                 cout<<"You don't have enough money"<<endl;
                                 return;
                      }
-                     cout << "Does " << command[3] << " accept the trade (type accept to accept)" << endl;
+                     cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
                      getline(cin,accept);
                      if (accept!="accept"){
-                        cout << command[3] << " has not accepted." << endl;
+                        cout << command[1] << " has not accepted." << endl;
                         return;
                      }
                     other->transferProperty(current, otherSquares[square_index]);
@@ -241,7 +245,7 @@ void Board::trade(vector<string> command, int currPlayer){
               int square_index=-1;
               string accept="";
               for (int i=0; i<numPropOwned; i++){
-              	     if (mySquares[numPropOwned]->getName()==command[1]){
+              	     if (mySquares[i]->getName()==command[2]){
                           square_index=i;
                           break;
                      }
@@ -254,20 +258,20 @@ void Board::trade(vector<string> command, int currPlayer){
               int numPropOwnedOther = otherSquares.size();
               int square_index_other=-1;
               for (int i=0; i<numPropOwnedOther; i++){
-                     if (otherSquares[numPropOwnedOther]->getName()==command[2]){
+                     if (otherSquares[i]->getName()==command[3]){
                           square_index_other=i;
                           break;
                      }
               }
               if (square_index_other==-1){
-                        cout<<command[3] <<" doesn't own this square." <<endl;
+                        cout<<command[1] <<" doesn't own this square." <<endl;
                         return;
               }
 
-              cout << "Does " << command[3] << " accept the trade (type accept to accept)" << endl;
+              cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
               getline(cin,accept);
               if (accept!="accept"){
-                   cout << command[3] << " has not accepted." << endl;
+                   cout << command[1] << " has not accepted." << endl;
                      return;
                    }
 	      current->transferProperty(other, mySquares[square_index]);
@@ -528,8 +532,10 @@ void Board::playTurn(){
 				if(!testMode)
 					roll=rollDice(-1, -1);
 				else{
-					if(command.size()==3 || command[1] != "" || command[2] != ""){
-						rollDice(stoi(command[1]), stoi(command[2]));
+					if(command.size()==3 && command[1] != "" && command[2] != ""){
+						cout << "break" << endl;
+						roll = rollDice(stoi(command[1]), stoi(command[2]));
+						cout << "break" << endl;
 					}
 					else{
 						roll = rollDice(-1, -1);
@@ -537,49 +543,51 @@ void Board::playTurn(){
 				}
 				cout << "You rolled " << roll[0] << " and " << roll[1] << "." << endl;
 				totalRoll = roll[0] + roll[1];
+				cout << "Roll: "<<totalRoll << endl;
+				cout << playerList[currPlayer]->getPosition() << endl;
+				playerList[currPlayer]->move(totalRoll);
+				cout << playerList[currPlayer]->getPosition()<<endl;
+				td->print();
+				while(playerList[currPlayer]->getPosition() > 40){
+					playerList[currPlayer]->move(-40);
+					squares[0]->action(playerList[currPlayer]);
+				}
+				cout << "You landed on: " << squares[playerList[currPlayer]->getPosition()]->getName() << endl;
+				if ((playerList[currPlayer]->getPosition()!=0)&&(playerList[currPlayer]->getPosition()!=10)){
+					squares[playerList[currPlayer]->getPosition()]->action(playerList[currPlayer]);
+				}
+				if (playerList[currPlayer]->isBankrupt()){
+					cout << "You have been bankrupted, your piece will now be removed." << endl;
+					numOfPlayers--;
+					playerList.erase(playerList.begin()+currPlayer);
+					if (numOfPlayers==1){
+						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+						ended=true;
+					}
+				}
+
 				if(roll[0] != roll[1]){
 					break;
 				}
 				else{
-					cout << "You rolled doubles." << endl;
-					if(testMode){
-						cout << "You are in testing mode. Please enter the following command again: roll <die1> <die2>." << endl;
-						while(ss >> temp){
-							command.push_back(temp);
-						}
+					cout << "You rolled doubles. You must roll again." << endl;
+					if (testMode){
+						cout << "Since you are in testing mode. You can enter your dice numbers. Type roll <die1> <die2>, or roll" << endl;
+						getline(cin, line);
+						stringstream ss(line);
+						string temp;	
+						int i=0;	
+						while (ss >> temp){
+							command[i]=temp;
+							i++;
+						}	
 					}
 				}
 			
 			}
-			playerList[currPlayer]->move(totalRoll);
-			td->print();
-			while(playerList[currPlayer]->getPosition() > 40){
-				playerList[currPlayer]->move(-40);
-				squares[0]->action(playerList[currPlayer]);
-			}
-			cout << "You landed on: " << squares[playerList[currPlayer]->getPosition()]->getName() << endl;
-			if ((playerList[currPlayer]->getPosition()!=0)&&(playerList[currPlayer]->getPosition()!=10)){
-				squares[playerList[currPlayer]->getPosition()]->action(playerList[currPlayer]);
-			}
-		
-		
 
-			if (playerList[currPlayer]->isBankrupt()){
-				cout << "You have been bankrupted, your piece will now be removed." << endl;
-				numOfPlayers--;
-				playerList.erase(playerList.begin()+currPlayer);
-				if (numOfPlayers==1){
-					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-					ended=true;
-				}
-			}
-			
-			while(totalRoll > 40){
-				totalRoll -= 40;
-				squares[0]->action(playerList[currPlayer]);
-			}
 			currPlayer++;
 			int numPlayers = playerList.size();
 			if(currPlayer>=numPlayers){
@@ -685,7 +693,7 @@ void Board::playTurn(){
 }
 
 vector<int> Board::rollDice(int die1, int die2){
-	if(!testMode){
+	if(die1==-1){
 		srand (time(NULL));
         	die1 = rand() % 6 + 1;
 		die2 = rand() % 6 + 1;

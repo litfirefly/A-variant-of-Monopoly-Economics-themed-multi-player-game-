@@ -57,6 +57,7 @@ void Residences::buy(shared_ptr<Player> player, int price){
 			mortgaged = false;
 			setOwner(player);
 			player->addResNum();
+                        player->addSquare(getBoard()->getSquares()[getPosition()]);
                         cout << "You bought this property for " << getCost() << endl;
 		}
 		else{

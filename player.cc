@@ -269,7 +269,7 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
 			        	     int square_index=-1;
 	      				     string accept="";
 					     for (int i=0; i<numPropOwned; i++){
-						if (squaresOwned[numPropOwned]->getName()==command[1]){
+						if (squaresOwned[numPropOwned]->getName()==command[3]){
 							square_index=i;
 							break;
 						}
@@ -282,10 +282,10 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
 						cout<<"The other player doesn't have enough money"<<endl;
 						continue;
 					     }
-					     cout << "Does " << command[3] << " accept the trade (type accept to accept)" << endl;
+					     cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
 					     getline(cin,accept);
 					     if (accept!="accept"){
-						cout << command[3] << " has not accepted." << endl;
+						cout << command[1] << " has not accepted." << endl;
 						continue;;
 					     }
 			    		     transferProperty(other, squaresOwned[square_index]);
@@ -299,7 +299,7 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
         	                        int square_index=-1;
               		                string accept="";
               	                        for (int i=0; i<numPropOwned; i++){
-                                                 if (squaresOwned[numPropOwned]->getName()==command[1]){
+                                                 if (squaresOwned[numPropOwned]->getName()==command[2]){
                                                       square_index=i;
                                                       break;
                                                  }
@@ -312,20 +312,20 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
                                         int numPropOwnedOther = otherSquares.size();
                                         int square_index_other=-1;
                                         for (int i=0; i<numPropOwnedOther; i++){
-                                            if (otherSquares[numPropOwnedOther]->getName()==command[2]){
+                                            if (otherSquares[numPropOwnedOther]->getName()==command[3]){
                                                    square_index_other=i;
                                                    break;;
                                             }
                                         }
                                         if (square_index_other==-1){
-                                                 cout<<command[3] <<" doesn't own this square." <<endl;
+                                                 cout<<command[1] <<" doesn't own this square." <<endl;
                                                  continue;
                                         }
 
-		  	                cout << "Does " << command[3] << " accept the trade (type accept to accept)" << endl;
+		  	                cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
               				getline(cin,accept);
               				if (accept!="accept"){
-                   			cout << command[3] << " has not accepted." << endl;
+                   			cout << command[1] << " has not accepted." << endl;
                      				continue;
                    			}
               				transferProperty(other, squaresOwned[square_index]);

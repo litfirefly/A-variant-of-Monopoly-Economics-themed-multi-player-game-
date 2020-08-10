@@ -103,19 +103,15 @@ void TextDisplay::print(){
 	for (int i=0; i<=10; i++){
 		updateSquare(squares[i], 10, 10-i);	
 	}
-	cout << "HERE" << endl;
 	for (int i=11; i<=20; i++){
 		updateSquare(squares[i], 20-i, 0);
 	}
-	cout << "HERE" << endl;
 	for (int i=21; i<=31; i++){
 		updateSquare(squares[i], 0, i-21);
 	}
-	cout << "HERE" << endl;
 	for (int i=30; i<=39; i++){
 		updateSquare(squares[i], i-30, 10);
 	}
-	cout << "HERE" << endl;
 	
 	
 	int numrows = board.size();
