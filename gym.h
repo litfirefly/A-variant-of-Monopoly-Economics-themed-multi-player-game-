@@ -29,4 +29,3 @@ class Gym : public Square{
 };
 
 #endif
-

@@ -14,5 +14,3 @@ void Osap::collectMoney(shared_ptr<Player> player){
 	cout << "Collected Money from OSAP!!!" << endl;
 	player->addMoney(money);
 }
-
-

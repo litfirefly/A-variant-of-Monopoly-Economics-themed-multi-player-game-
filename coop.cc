@@ -21,4 +21,3 @@ void Coop::action(shared_ptr<Player> player){
 		getBoard()->setRollUpCards(getBoard()->getRollUpCards()-1);
 	}
 }
-

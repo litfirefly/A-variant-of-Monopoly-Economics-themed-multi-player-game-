@@ -14,5 +14,3 @@ void GoToTims::action(shared_ptr<Player> player){
 	player->setJail(true);
 	player->setJailTurns(0);
 }
-
-

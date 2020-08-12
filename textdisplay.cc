@@ -123,6 +123,3 @@ void TextDisplay::print(){
 		cout << endl;
 	}
 }
-
-
-

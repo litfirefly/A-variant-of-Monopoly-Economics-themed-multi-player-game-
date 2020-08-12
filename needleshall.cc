@@ -43,7 +43,3 @@ void NeedlesHall::action(shared_ptr<Player> player){
 		}
 	}
 }
-
-
-
-

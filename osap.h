@@ -15,4 +15,3 @@ class Osap : public Square {
 };
 
 #endif
-

@@ -11,4 +11,3 @@ GooseNesting::GooseNesting(std::shared_ptr<Board> board,string name, int positio
 void GooseNesting::action(shared_ptr<Player> player){
 	cout << "A flock geese is attacking. Take cover!" << endl;
 }
-

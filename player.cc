@@ -342,4 +342,3 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
 void Player::move(int pos){
 	position+=pos;
 }
-

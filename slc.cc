@@ -51,4 +51,3 @@ void SLC::action(shared_ptr<Player> player){
 		}
 	}
 }
-

@@ -50,9 +50,6 @@ std::shared_ptr<Board> Square::getBoard(){
 	return board;
 }
 
-
-
-
 bool Square::isGym(){
 	return false;
 }
@@ -65,6 +62,3 @@ void Square::improveBuy(std::shared_ptr<Player> player){}
 void Square::improveSell(std::shared_ptr<Player> player){}
 void Square::action(std::shared_ptr<Player> player){}
 void Square::auction(){}
-
-
-

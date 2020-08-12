@@ -86,5 +86,3 @@ void DCTimsLine::useRollUp(shared_ptr<Player> player){
 	player->setJail(false);
 	player->setJailTurns(-1);
 }
-
-

@@ -11,9 +11,7 @@ vector<int> tuition;
 bool owned;
 bool mortgaged;
 	
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, 
-		  int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
-									     improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
+AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
 		if(getOwner()){
 			owned=true;
 		}	
@@ -26,7 +24,7 @@ void AcademicProperty::action(shared_ptr<Player> player){
 		}
 		cout << "You have landed on " << getName() <<  "." << endl;
 		if (getOwner()==nullptr){
-			cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
+			cout << "No one owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
 			string line = "";
 			cin >> line;
 			if (line=="buy"){
@@ -90,12 +88,17 @@ void AcademicProperty::auction(){
                         int newBid=0;
                         cout << "Enter bid value: " << endl;
                         cin >> newBid;
-                        if (newBid>currBid){
-                                currBid=newBid;
-                        }
-                        else{
-                                cout << "This bid is not higher than the previous bid, your turn will be skipped." << endl;
-                        }
+			while( true ){
+				if (newBid>currBid){
+                                	currBid=newBid;
+					break;
+                        	}
+                        	else{
+                                	cout << "This bid is not higher than the previous bid. Enter a value higher than a previous value: " << endl;
+                        	}
+
+			}
+              
                 }
                 index++;
                 if(index == numPlayers){
@@ -231,4 +234,3 @@ bool AcademicProperty::isMonopolyBlockValid(){
 	return true;
 	
 }
-
