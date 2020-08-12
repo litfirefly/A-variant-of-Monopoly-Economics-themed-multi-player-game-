@@ -39,7 +39,7 @@ void Board::initSquares(){
 	squares.push_back(make_shared<Gym>(shared_from_this(), "PAC", 12, nullptr, false));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DWE", "Eng", 13, 140, nullptr, 0, 100, DWE, false));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "CPH", "Eng", 14, 160, nullptr, 0, 100, CPH, false));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "CPH", 15, nullptr, false));
+	squares.push_back(make_shared<Residences>(shared_from_this(), "UWP", 15, nullptr, false));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "LHI", "Health", 16, 180, nullptr, 0, 100, LHI, false));
 	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC", 17));
 	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "BMH", "Health", 18, 180, nullptr, 0, 100, BMH, false));
@@ -358,8 +358,9 @@ void Board::loadGame(string load){
 	}
 
 	initSquares();
-	int numSquares = squares.size();
-	for (int i=0; i<numSquares; i++){
+	int numOwnable = ownableIndex.size();
+	for (int i=0; i<numOwnable; i++){
+		auto square = squares[ownableIndex[i]];
 		getline(inp, line);
 		stringstream ss(line);
 		string temp;
@@ -367,15 +368,16 @@ void Board::loadGame(string load){
 		while (ss >> temp){
 			command.push_back(temp);
 		}
-		if (command[0]==squares[i]->getName()){
+
+		if (command[0]==square->getName()){
 			string owner = command[1];
 			if (owner!="BANK"){
 				bool found = false;
 				for (int j=0; j<numPlayers; j++){
 					if (owner==playerList[j]->getName()){
 						found = true;
-						squares[i]->setOwner(playerList[j]);
-						playerList[j]->addSquare(squares[i]);
+						square->setOwner(playerList[j]);
+						playerList[j]->addSquare(square);
 						break;
 					}
 				}
@@ -383,19 +385,19 @@ void Board::loadGame(string load){
 					throw invalid_argument("Not a valid owner");
 				}
 			}
+
 			int improvements = stoi(command[2]);
 			if (improvements<-1 || improvements>5){
 				throw invalid_argument("Improvements must between -1(Mortgaged) and 5");
 			}
-			if ((improvements==-1 || improvements>0) && !(squares[i]->isOwnable())){
-				throw invalid_argument("Improvements for not ownables properties must be 0.");
-			}
-			if (improvements>0 && !(squares[i]->isImprovable())){
+			if (improvements>0 && !(square->isImprovable())){
 				throw invalid_argument("Improvements for not improvable properties must be 0, or -1(mortgaged)");
 			}
-			squares[i]->setImprovementLevel(improvements);	
+			square->setImprovementLevel(improvements);	
 		}
 	}
+	cout << "M: " << squares[31]->getImprovementLevel() << endl;
+	td = make_shared<TextDisplay>(shared_from_this());
 	playTurn();
 }
 
@@ -423,38 +425,9 @@ void Board::saveGame(string filename){
 		}
 		file << playerstring << endl;
 	}
-	vector<int> io;
-	io.push_back(1);
-	io.push_back(3);
-	io.push_back(5);
-	io.push_back(6);
-	io.push_back(8);
-	io.push_back(9);
-	io.push_back(11);
-	io.push_back(12);
-	io.push_back(13);
-	io.push_back(14);
-	io.push_back(15);
-	io.push_back(16);
-	io.push_back(18);
-	io.push_back(19);
-	io.push_back(21);
-	io.push_back(23);
-	io.push_back(24);
-	io.push_back(25);
-	io.push_back(26);
-	io.push_back(27);
-	io.push_back(28);
-	io.push_back(29);
-	io.push_back(31);
-	io.push_back(32);
-	io.push_back(34);
-	io.push_back(35);
-	io.push_back(37);
-	io.push_back(39);
-	int numOwnable = io.size();
+	int numOwnable = ownableIndex.size();
 	for (int i=0; i<numOwnable; i++){
-		auto square = squares[io[i]];
+		auto square = squares[ownableIndex[i]];
 		string square_string = square->getName();
 		if (square->getOwner()){
 			square_string += " " + square->getOwner()->getName();
@@ -502,6 +475,8 @@ void Board::playTurn(){
 	int currPlayer = 0;
 	string line = "";
 	bool ended = false;
+	cout << squares.size() << endl;
+	cout << playerList.size() << endl;
 	td->print();
 	displayOption(playerList[currPlayer]);
 	cout << "Enter Input: " << endl;
@@ -528,73 +503,60 @@ void Board::playTurn(){
 			}
 			vector<int> roll;
 			int totalRoll;
-			while(true){
-				if(!testMode)
-					roll=rollDice(-1, -1);
-				else{
-					if(command.size()==3 && command[1] != "" && command[2] != ""){
-						cout << "break" << endl;
-						roll = rollDice(stoi(command[1]), stoi(command[2]));
-						cout << "break" << endl;
-					}
-					else{
-						roll = rollDice(-1, -1);
-					}
-				}
-				cout << "You rolled " << roll[0] << " and " << roll[1] << "." << endl;
-				totalRoll = roll[0] + roll[1];
-				cout << "Roll: "<<totalRoll << endl;
-				cout << playerList[currPlayer]->getPosition() << endl;
-				playerList[currPlayer]->move(totalRoll);
-				cout << playerList[currPlayer]->getPosition()<<endl;
-				td->print();
-				while(playerList[currPlayer]->getPosition() > 40){
-					playerList[currPlayer]->move(-40);
-					squares[0]->action(playerList[currPlayer]);
-				}
-				cout << "You landed on: " << squares[playerList[currPlayer]->getPosition()]->getName() << endl;
-				if ((playerList[currPlayer]->getPosition()!=0)&&(playerList[currPlayer]->getPosition()!=10)){
-					squares[playerList[currPlayer]->getPosition()]->action(playerList[currPlayer]);
-				}
-				if (playerList[currPlayer]->isBankrupt()){
-					cout << "You have been bankrupted, your piece will now be removed." << endl;
-					numOfPlayers--;
-					playerList.erase(playerList.begin()+currPlayer);
-					if (numOfPlayers==1){
-						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-						ended=true;
-					}
-				}
-
-				if(roll[0] != roll[1]){
-					break;
+		
+			if(!testMode)
+				roll=rollDice(-1, -1);
+			else{
+				if(command.size()==3 && command[1] != "" && command[2] != ""){
+					roll = rollDice(stoi(command[1]), stoi(command[2]));
 				}
 				else{
-					cout << "You rolled doubles. You must roll again." << endl;
-					if (testMode){
-						cout << "Since you are in testing mode. You can enter your dice numbers. Type roll <die1> <die2>, or roll" << endl;
-						getline(cin, line);
-						stringstream ss(line);
-						string temp;	
-						int i=0;	
-						while (ss >> temp){
-							command[i]=temp;
-							i++;
-						}	
-					}
+					roll = rollDice(-1, -1);
 				}
+			}
+			totalRoll = roll[0] + roll[1];
+			cout << playerList[currPlayer]->getPosition() << endl;
+			cout << playerList[currPlayer]->getPosition()<<endl;
+			playerList[currPlayer]->move(totalRoll);
 			
+			while(playerList[currPlayer]->getPosition() >= 40){
+				playerList[currPlayer]->move(-40);
+				squares[0]->action(playerList[currPlayer]);
+			}
+			td->print();
+			cout << "Your rolled " << roll[0] << " and " << roll[1] << endl;
+			cout << "You landed on: " << squares[playerList[currPlayer]->getPosition()]->getName() << endl;
+			if ((playerList[currPlayer]->getPosition()!=0)&&(playerList[currPlayer]->getPosition()!=10)){
+				squares[playerList[currPlayer]->getPosition()]->action(playerList[currPlayer]);
+			}
+			if (playerList[currPlayer]->getPosition()<0){
+				playerList[currPlayer]->move(40);
+			}
+			if (playerList[currPlayer]->isBankrupt()){
+				cout << "You have been bankrupted, your piece will now be removed." << endl;
+				numOfPlayers--;
+				playerList.erase(playerList.begin()+currPlayer);
+				if (numOfPlayers==1){
+					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
+					ended=true;
+				}
 			}
 
-			currPlayer++;
-			int numPlayers = playerList.size();
-			if(currPlayer>=numPlayers){
-				currPlayer=0;
+			if(roll[0] != roll[1]){			
+				currPlayer++;
+				int numPlayers = playerList.size();
+				if(currPlayer>=numPlayers){
+					currPlayer=0;
+				}
+				cout << "It is now the next player's turn" << endl;
+				displayOption(playerList[currPlayer]);
 			}
-			cout << "It is now the next player's turn" << endl;
-			displayOption(playerList[currPlayer]);
+			else{
+				cout << "You rolled doubles. Take your turn again." << endl;
+			}
+			
 			cout << "Enter Input: " << endl;
 		}		
 		else if(command[0] == "next"){

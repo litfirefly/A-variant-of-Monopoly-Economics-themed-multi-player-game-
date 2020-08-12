@@ -8,7 +8,7 @@
 #include <time.h>
 using namespace std;
 
-NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string name, int position) : Square{board,name, "", position, -1, nullptr, -1, false, false} {}
+NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string name, int position) : Square{board,name, "", position, 0, nullptr, 0, false, false} {}
 
 void NeedlesHall::action(shared_ptr<Player> player){
         srand (time(NULL));
@@ -43,3 +43,7 @@ void NeedlesHall::action(shared_ptr<Player> player){
 		}
 	}
 }
+
+
+
+

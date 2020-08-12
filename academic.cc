@@ -11,7 +11,10 @@ vector<int> tuition;
 bool owned;
 bool mortgaged;
 	
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
+AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, 
+		shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition, bool mortgaged): 
+			Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
+			improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
 		if(getOwner()){
 			owned=true;
 		}	
@@ -77,33 +80,31 @@ void AcademicProperty::auction(){
         while (auctioneers!=1){
                 string option;
                 cout << "The current bid is: $ " << currBid << "." << endl;
-                cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
-                cin >> option;
-                if(option == "withdraw"){
-                        withdraw[index] = true;
-                        auctioneers--;
-                }
-                // Excepting the user to enter a higher, positive valid bid than previous user
-                else if(option == "bid"){
-                        int newBid=0;
-                        cout << "Enter bid value: " << endl;
-                        cin >> newBid;
-			while( true ){
-				if (newBid>currBid){
-                                	currBid=newBid;
-					break;
-                        	}
+                while(true){
+			cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
+	                cin >> option;
+        	        if(option == "withdraw"){
+                	        withdraw[index] = true;
+                        	auctioneers--;
+             	   	}
+                	else if(option == "bid"){
+                        	int newBid=0;
+	                        cout << "Enter bid value: " << endl;
+        	                cin >> newBid;
+                	        if (newBid>currBid){
+                        	        currBid=newBid;
+                	        }
                         	else{
-                                	cout << "This bid is not higher than the previous bid. Enter a value higher than a previous value: " << endl;
-                        	}
-
-			}
-              
-                }
-                index++;
-                if(index == numPlayers){
-                        index = 0;
-                }
+                                	cout << "This bid is not higher than the previous bid, your turn will be skipped." << endl;
+                        		continue;
+				}
+                	}
+        	        index++;
+                	if(index == numPlayers){
+                        	index = 0;
+                	}
+			break;
+		}
         }
         int winner = 0;
         for (int i=0; i<numPlayers; i++){
@@ -234,3 +235,4 @@ bool AcademicProperty::isMonopolyBlockValid(){
 	return true;
 	
 }
+

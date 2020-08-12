@@ -24,6 +24,10 @@ void Player::printPlayerAssets(){
 	else{
 		cout << "Money: $" << money << endl;
 	}
+
+	if (timCups>0){
+		cout << "TimCups: " << timCups << endl;
+	}
 	int size=squaresOwned.size();
 	if (size>0){
 		cout << "Properties: " << squaresOwned[0]->getName();
@@ -31,7 +35,10 @@ void Player::printPlayerAssets(){
 	for (int i=1; i<size; i++){
 		cout << ", " << squaresOwned[i]->getName();
 	}
-	cout << endl;
+	if (size>0){
+		cout << endl;
+	}
+	
 }
 
 
@@ -342,3 +349,4 @@ void Player::subtractMoney(int amount, vector<shared_ptr<Player>> otherPlayers){
 void Player::move(int pos){
 	position+=pos;
 }
+

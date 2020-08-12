@@ -189,3 +189,4 @@ bool Gym::isMortgaged(){
 	}
 	return mortgaged;
 }
+

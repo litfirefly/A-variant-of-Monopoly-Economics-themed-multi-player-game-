@@ -9,7 +9,7 @@
 using namespace std;
 
 
-DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void DCTimsLine::action(shared_ptr<Player> player){
 	while(true){
@@ -86,3 +86,5 @@ void DCTimsLine::useRollUp(shared_ptr<Player> player){
 	player->setJail(false);
 	player->setJailTurns(-1);
 }
+
+

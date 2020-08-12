@@ -53,12 +53,12 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 				board[row+3][col+6]=32;
 				board[row+3][col+7]=32;
 			}
-			else if (square->getImprovementLevel()==1){
+			else if (square->getImprovementLevel()==2){
 				board[row+3][col+5]=73;
 				board[row+3][col+6]=73;
 				board[row+3][col+7]=32;
 			}
-			else if (square->getImprovementLevel()==1){
+			else if (square->getImprovementLevel()==3){
 				board[row+3][col+5]=73;
 				board[row+3][col+6]=73;
 				board[row+3][col+7]=73;
@@ -79,7 +79,7 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 				board[row+3][col+6]=32;
 				board[row+3][col+7]=32;
 		}
-		if (square->isOwnable() && square->isMortgaged()){
+		if (square->getImprovementLevel()==-1 || square->isMortgaged()){
 			//M: 77
 			board[row+3][col+8] = 77;
 		}
@@ -99,20 +99,18 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 }
 void TextDisplay::print(){
 	auto squares = game->getSquares();
-	
 	for (int i=0; i<=10; i++){
 		updateSquare(squares[i], 10, 10-i);	
 	}
 	for (int i=11; i<=20; i++){
 		updateSquare(squares[i], 20-i, 0);
 	}
-	for (int i=21; i<=31; i++){
-		updateSquare(squares[i], 0, i-21);
+	for (int i=21; i<=30; i++){
+		updateSquare(squares[i], 0, i-20);
 	}
-	for (int i=30; i<=39; i++){
+	for (int i=31; i<=39; i++){
 		updateSquare(squares[i], i-30, 10);
 	}
-	
 	
 	int numrows = board.size();
 	for (int i=0; i<numrows; i++){
@@ -123,3 +121,6 @@ void TextDisplay::print(){
 		cout << endl;
 	}
 }
+
+
+

@@ -17,6 +17,7 @@ class Board : public std::enable_shared_from_this<Board>{
 	std::vector<std::shared_ptr<Player>> playerList;
 	std::vector<std::shared_ptr<Square>> squares;
 	const std::vector<std::string> pieces = {"G: Goose", "B: GRT Bus ", "D: Tim Hortons Doughnut", "P: Professor", "S: Student", "$: Money", "L: Laptop", "T: Pink Tie"};
+	const std::vector<int> ownableIndex = {1,3,5,6,8,9,11,12,13,14,15,16,18,19,21,23,24,25,26,27,28,29,31,32,34,35,37,39};
 	std::vector<bool> piecesChosen;
 	bool testMode = false;
 	std::shared_ptr<TextDisplay> td;
@@ -60,3 +61,4 @@ class Board : public std::enable_shared_from_this<Board>{
 };
 
 #endif
+

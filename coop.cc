@@ -6,7 +6,7 @@
 using namespace std;  
 
 
-Coop::Coop(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+Coop::Coop(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void Coop::action(shared_ptr<Player> player){
 	player->subtractMoney(payMoney, getBoard()->getPlayers());
@@ -21,3 +21,4 @@ void Coop::action(shared_ptr<Player> player){
 		getBoard()->setRollUpCards(getBoard()->getRollUpCards()-1);
 	}
 }
+
