@@ -65,6 +65,7 @@ void AcademicProperty::buy(shared_ptr<Player> player, int price){
 }
 
 void AcademicProperty::auction(){
+	bool notBought = false;
         auto players = getBoard()->getPlayers();
         int numPlayers = players.size();
         int auctioneers = players.size();
@@ -75,7 +76,7 @@ void AcademicProperty::auction(){
         int currBid = 0;
         cout << "The starting bid is: $ " << currBid << "." << endl;
         int index=0;
-        while (auctioneers != 1){
+        while (auctioneers != 1 || auctioneers != 0){
                 string option;
                 cout << "The current bid is: $ " << currBid << "." << endl;
                 cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
@@ -94,6 +95,10 @@ void AcademicProperty::auction(){
                         	if(newBid == "withdraw"){
                                 	withdraw[index] = true;
                                 	auctioneers--;
+					if(auctioneers == 0){
+						cout << "No one would like to buy this property. Please proceed as normal." << endl;
+						notBought = true;
+					}
                                 	break;
                         	}
                         	for(size_t i = 0; i < newBid.length(); i++){
@@ -116,16 +121,16 @@ void AcademicProperty::auction(){
                         index = 0;
                 }
         }
-        int winner = 0;
-        for (int i=0; i<numPlayers; i++){
-                if(!withdraw[i]){
-                        winner=i;
-                        break;
-                }
-        }
-        buy(players[winner], currBid);
-
-
+	if(!notBought){
+		int winner = 0;
+        	for (int i=0; i<numPlayers; i++){
+                	if(!withdraw[i]){
+                        	winner=i;
+                        	break;
+                	}
+        	}
+        	buy(players[winner], currBid);
+	}
 }
 
 void AcademicProperty::improveBuy(shared_ptr<Player> player){

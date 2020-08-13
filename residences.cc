@@ -106,7 +106,7 @@ void Residences::payRent(shared_ptr<Player> tenant){
 }
 
 void Residences::auction(){ 
-
+	bool notBought = false;
         auto players = getBoard()->getPlayers();
         int numPlayers = players.size();
         int auctioneers = players.size();
@@ -136,6 +136,10 @@ void Residences::auction(){
                                 if(newBid == "withdraw"){
                                         withdraw[index] = true;
                                         auctioneers--;
+					if(auctioneers == 0){
+                                                cout << "No one would like to buy this property. Please proceed as normal." << endl;
+                                                notBought = true;
+                                        }
                                         break;
                                 }
                                 for(size_t i = 0; i < newBid.length(); i++){
@@ -158,14 +162,16 @@ void Residences::auction(){
                         index = 0;
                 }
         }
-        int winner = 0;
-        for (int i=0; i<numPlayers; i++){
-                if(!withdraw[i]){
-                        winner=i;
-                        break;
-                }
-        }
-        buy(players[winner], currBid);
+	if(!notBought){
+        	int winner = 0;
+        	for (int i=0; i<numPlayers; i++){
+                	if(!withdraw[i]){
+                        	winner=i;
+                        	break;
+                	}
+        	}
+        	buy(players[winner], currBid);
+	}
 }
 
 
