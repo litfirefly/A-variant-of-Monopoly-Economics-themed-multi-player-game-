@@ -13,6 +13,9 @@ void GoToTims::action(shared_ptr<Player> player){
 	player->setPosition(getBoard()->getSquares()[10]->getPosition());
 	player->setJail(true);
 	player->setJailTurns(0);
+
+	getBoard()->getSquares()[player->getPosition()]->notifyObservers();
+
 }
 
 

@@ -48,8 +48,8 @@ void AcademicProperty::action(shared_ptr<Player> player){
 }
 
 void AcademicProperty::buy(shared_ptr<Player> player, int price){
-        if(!isOwned()){
-                if(player->getMoney() - price >= 0){
+        if(!getOwner()){
+		if(player->getMoney() - price >= 0){
                         player->subtractMoney(price, getBoard()->getPlayers());
                         owned = true;
                         mortgaged = false;
@@ -64,6 +64,7 @@ void AcademicProperty::buy(shared_ptr<Player> player, int price){
         else{
                 cout << getOwner()->getName() << " owns " << getName() << "." << endl;
         }
+	notifyObservers();
 }
 
 void AcademicProperty::auction(){
@@ -114,6 +115,7 @@ void AcademicProperty::auction(){
                 }
         }
         buy(players[winner], currBid);
+	notifyObservers();
 
 
 }
@@ -121,8 +123,10 @@ void AcademicProperty::auction(){
 void AcademicProperty::improveBuy(shared_ptr<Player> player){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
+		cout << "First undo the mortgage" << endl;
+		return;
 	}
-	if(!isMortgaged() && isOwned() && player->getName() == getOwner()->getName() && isMonopolyBlockValid()){
+	if(!isMortgaged() && getImprovementLevel()<5 && getOwner()!=nullptr && player->getName() == getOwner()->getName() && isMonopolyBlockValid()){
 		int subMoney = tuition[getImprovementLevel() + 1];
 		int max_imp_level = tuition.size()-1;
 		if(getImprovementLevel() < max_imp_level && player->getMoney()- subMoney >= 0){
@@ -133,36 +137,44 @@ void AcademicProperty::improveBuy(shared_ptr<Player> player){
 			cout << "Not enough money to improve. " << endl;
 		}
 	}
+	notifyObservers();
 }
 
 void AcademicProperty::improveSell (shared_ptr<Player> player){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(!isMortgaged() && isOwned() && player->getName() == getOwner()->getName() && isMonopolyBlockValid() && getImprovementLevel()>0){
+        if(!isMortgaged() && getImprovementLevel()>0 && getOwner()!=nullptr && player->getName() == getOwner()->getName() && isMonopolyBlockValid() && getImprovementLevel()>0){
                 int add = improvementCost * 0.5; 
 		player->addMoney(add);  
 		setImprovementLevel(getImprovementLevel()-1);
-        }
+	}       
+	notifyObservers();
 }
 
 void AcademicProperty::payTuition(shared_ptr<Player> tenant){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(isOwned() && !isMortgaged() && tenant->getName() != getOwner()->getName()){    
+        if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){    
 		int subMoney = 0;
 		subMoney = tuition[getImprovementLevel()];
-                
+                if (isMonopolyBlockValid()&&getImprovementLevel()==0){
+			subMoney*=2;
+		}
 		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
                 if(tenant->isBankrupt()){
-                        cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
+                        if (getBoard()->getPlayers().size()<3){
+				cout << "Game has ended." << endl;
+				return;
+			}
+			cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
                         getOwner()->addMoney(tenant->getMoney());
                         vector<shared_ptr<Square>> squares = tenant->getSquares();
                         int numPropertiesTenant = squares.size();
                         for (int i=0; i<numPropertiesTenant; i++){
                                 auto square = squares[i];
-                                tenant->transferProperty(getOwner(), square);
+                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
                         }
                         for (int i=0; i<tenant->getTimCups(); i++){
                                 getOwner()->addTimCup();
@@ -190,14 +202,16 @@ void AcademicProperty::unmortgage(shared_ptr<Player> player){
                         cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
                 }
         }
+	notifyObservers();
 }
 
 void AcademicProperty::mortgage(shared_ptr<Player> player){
-        if(!mortgaged && getOwner()->getName() == player->getName()){
+        if(!mortgaged && getImprovementLevel()==0 && getOwner()->getName() == player->getName()){
                 player->addMoney(getCost() / 2);
                 mortgaged = true;
         	setImprovementLevel(-1);
 	}
+	notifyObservers();
 }
 
 

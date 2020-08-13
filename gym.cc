@@ -48,7 +48,7 @@ void Gym::buy(shared_ptr<Player> player, int price){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(!isOwned()){
+        if(!getOwner()){
                 if(player->getMoney() - price >= 0){
                         player->subtractMoney(price, getBoard()->getPlayers());
                         owned = true;
@@ -65,20 +65,23 @@ void Gym::buy(shared_ptr<Player> player, int price){
         else{
                 cout << player->getName() << " owns " << getName() << "." << endl;
         }
+	notifyObservers();
 }
 
 void Gym::payFee(shared_ptr<Player> tenant){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(owned && !mortgaged){
-                int subMoneyTimes = 0;
+        if(getOwner() && !mortgaged && tenant!=getOwner()){
+		cout << "G1" << endl;
+                cout << getOwner()->getGymNum() << endl;
+		int subMoneyTimes = 0;
 		
 		srand (time(NULL));
 		int die1 = rand() % 6 + 1;
 		int die2 = rand() % 6 + 1;
 		int dieSum = die1 + die2;
-
+		
                 if(getOwner()->getGymNum() == 1)
                         subMoneyTimes = 4;
                 else if(getOwner()->getGymNum() == 2)
@@ -88,13 +91,16 @@ void Gym::payFee(shared_ptr<Player> tenant){
 
                 tenant->subtractMoney(subMoney, getBoard()->getPlayers());
                 if(tenant->isBankrupt()){
+			if (getBoard()->getPlayers().size()<3){
+				cout << "Game has ended" << endl;
+			}
 			cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
 			getOwner()->addMoney(tenant->getMoney());
 			vector<shared_ptr<Square>> squares = tenant->getSquares();
 			int numPropertiesTenant = squares.size();
 			for (int i=0; i<numPropertiesTenant; i++){
 				auto square = squares[i];
-				tenant->transferProperty(getOwner(), square);
+				tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
 			}
 			for (int i=0; i<tenant->getTimCups(); i++){
 				getOwner()->addTimCup();
@@ -160,6 +166,7 @@ void Gym::mortgage(shared_ptr<Player> player){
                 mortgaged = true;
         	setImprovementLevel(-1);
 	}
+	notifyObservers();
 }
 
 void Gym::unmortgage(shared_ptr<Player> player){
@@ -177,6 +184,7 @@ void Gym::unmortgage(shared_ptr<Player> player){
                         cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
                 }
         }
+	notifyObservers();
 }
 
 bool Gym::isOwned(){

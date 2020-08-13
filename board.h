@@ -52,12 +52,13 @@ class Board : public std::enable_shared_from_this<Board>{
 	void setTesting();
 	void playTurn();
 	void loadGame(std::string file);
-	void saveGame(std::string file);
+	void saveGame(std::string file, int index);
 	std::vector<int> rollDice(int d1, int d2);
 	std::vector<std::shared_ptr<Player>> getPlayers();
 	std::vector<std::shared_ptr<Square>> getSquares();
 	int getRollUpCards();
 	void setRollUpCards(int cards);
+	bool isInTestMode();
 };
 
 #endif

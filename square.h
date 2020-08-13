@@ -1,12 +1,13 @@
 #ifndef _SQUARE_H_
 #define _SQUARE_H_
 #include "board.h"
+#include "subject.h"
 #include <string>
 #include <vector>
 #include <memory>
 class Player;
 class Board;
-class Square{
+class Square: public Subject{
 	std::shared_ptr<Board> board;	
 	std::string name;
 	std::string monopolyBlock;	
@@ -19,7 +20,7 @@ class Square{
  public:
   Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, 
 		  int position, int cost, std::shared_ptr<Player> owner, int improvement_level, bool ownable, bool improvable);
-  std::string getName();
+  virtual std::string getName() override;
   std::string getMonopolyBlock();
   int getPosition();
   int getCost();
@@ -39,6 +40,7 @@ class Square{
   virtual void improveSell(std::shared_ptr<Player> player);
   virtual void action(std::shared_ptr<Player> player);
   virtual void auction();
+  ~Square();
 };
 
 #endif

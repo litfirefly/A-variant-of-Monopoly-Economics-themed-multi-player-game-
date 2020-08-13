@@ -15,7 +15,7 @@ class TextDisplay: public Observer {
     	    void updateSquare(std::shared_ptr<Square>, int row, int col);
  public:
     TextDisplay(std::shared_ptr<Board> game);
-    virtual void notify( Subject & whoNotified ) override;
+    virtual void notify(std::shared_ptr<Subject>  whoNotified ) override;
     virtual void notify() override;
     void print();
 };

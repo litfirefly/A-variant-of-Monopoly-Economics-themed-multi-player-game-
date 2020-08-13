@@ -29,9 +29,11 @@ std::shared_ptr<Player> Square::getOwner(){
 
 void Square::setImprovementLevel(int level){
 	improvement_level = level;
+	notifyObservers();
 }
 void Square::setOwner(std::shared_ptr<Player> player){
 	owner = player;
+	notifyObservers();
 }	
 
 int Square::getImprovementLevel(){
@@ -65,4 +67,4 @@ void Square::improveBuy(std::shared_ptr<Player> player){}
 void Square::improveSell(std::shared_ptr<Player> player){}
 void Square::action(std::shared_ptr<Player> player){}
 void Square::auction(){}
-
+Square::~Square(){}

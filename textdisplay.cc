@@ -21,8 +21,30 @@ TextDisplay::TextDisplay(shared_ptr<Board> game): game{game} {
 
 
 
-void TextDisplay::notify( Subject & whoNotified){
-	//UpdateThisSquare
+void TextDisplay::notify(shared_ptr<Subject> whoNotified){
+	string square_name = whoNotified->getName();
+	int squareCount=game->getSquares().size();
+	shared_ptr<Square> square = nullptr;
+	for (int i=0; i<squareCount; i++){
+		if (game->getSquares()[i]->getName()==square_name){
+			square = game->getSquares()[i];
+			break;
+		}
+	}
+	int pos=square->getPosition();
+	if (pos<=10){
+		updateSquare(square, 10, 10-pos);
+	}
+	else if(pos<=20){
+		updateSquare(square,20-pos,0);
+	}
+	else if(pos<=30){
+		updateSquare(square,0,pos-20);
+	}
+	else{
+		updateSquare(square, pos-30, 10);
+	}
+	
 }
 
 void TextDisplay::notify(){}
@@ -30,7 +52,6 @@ void TextDisplay::notify(){}
 void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 		int row = (rown*6)+1;
 		int col = (coln*9);
-		
 		if (square->getOwner()!=nullptr){
 			//O:79
 			//::58	
@@ -49,7 +70,7 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 			//I:73
 			//V:86
 			if (square->getImprovementLevel()==1){
-				board[row-3][col+5]=73;
+				board[row+3][col+5]=73;
 				board[row+3][col+6]=32;
 				board[row+3][col+7]=32;
 			}
@@ -83,6 +104,9 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 			//M: 77
 			board[row+3][col+8] = 77;
 		}
+		else{
+			board[row+3][col+8] = 32;
+		}
 	
 		int count=0;
 		auto players = game->getPlayers();
@@ -98,20 +122,6 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 		}
 }
 void TextDisplay::print(){
-	auto squares = game->getSquares();
-	for (int i=0; i<=10; i++){
-		updateSquare(squares[i], 10, 10-i);	
-	}
-	for (int i=11; i<=20; i++){
-		updateSquare(squares[i], 20-i, 0);
-	}
-	for (int i=21; i<=30; i++){
-		updateSquare(squares[i], 0, i-20);
-	}
-	for (int i=31; i<=39; i++){
-		updateSquare(squares[i], i-30, 10);
-	}
-	
 	int numrows = board.size();
 	for (int i=0; i<numrows; i++){
 		int numcols = board[i].size();
