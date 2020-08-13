@@ -3,7 +3,8 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <iostream>              
+#include <iostream>            
+#include <string>  
 using namespace std;
 
 int improvementCost;
@@ -11,10 +12,7 @@ vector<int> tuition;
 bool owned;
 bool mortgaged;
 	
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, 
-		shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition, bool mortgaged): 
-			Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
-			improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
+AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition, bool mortgaged): Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, improvementCost{improvementCost}, tuition{tuition}, owned{false}, mortgaged{mortgaged}{
 		if(getOwner()){
 			owned=true;
 		}	
@@ -22,15 +20,15 @@ AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name
 
 
 void AcademicProperty::action(shared_ptr<Player> player){
-		if (getImprovementLevel()==-1){
+		if (getImprovementLevel() == -1){
 			mortgaged=true;
 		}
 		cout << "You have landed on " << getName() <<  "." << endl;
-		if (getOwner()==nullptr){
+		if (getOwner() == nullptr){
 			cout << "No one owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
 			string line = "";
 			cin >> line;
-			if (line=="buy"){
+			if (line == "buy"){
 				buy(player, getCost());
 			}
 			else{
@@ -38,7 +36,7 @@ void AcademicProperty::action(shared_ptr<Player> player){
 				auction();
 			}
 		}
-		else if (getOwner()==player){
+		else if (getOwner() == player){
 			cout << "You own this property, no action is to be taken." << endl;
 		}
 		else{
@@ -48,8 +46,8 @@ void AcademicProperty::action(shared_ptr<Player> player){
 }
 
 void AcademicProperty::buy(shared_ptr<Player> player, int price){
-        if(!getOwner()){
-		if(player->getMoney() - price >= 0){
+        if(!isOwned()){
+                if(player->getMoney() - price >= 0){
                         player->subtractMoney(price, getBoard()->getPlayers());
                         owned = true;
                         mortgaged = false;
@@ -64,7 +62,6 @@ void AcademicProperty::buy(shared_ptr<Player> player, int price){
         else{
                 cout << getOwner()->getName() << " owns " << getName() << "." << endl;
         }
-	notifyObservers();
 }
 
 void AcademicProperty::auction(){
@@ -78,34 +75,46 @@ void AcademicProperty::auction(){
         int currBid = 0;
         cout << "The starting bid is: $ " << currBid << "." << endl;
         int index=0;
-        while (auctioneers!=1){
+        while (auctioneers != 1){
                 string option;
                 cout << "The current bid is: $ " << currBid << "." << endl;
-                while(true){
-			cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
-	                cin >> option;
-        	        if(option == "withdraw"){
-                	        withdraw[index] = true;
-                        	auctioneers--;
-             	   	}
-                	else if(option == "bid"){
-                        	int newBid=0;
-	                        cout << "Enter bid value: " << endl;
-        	                cin >> newBid;
-                	        if (newBid>currBid){
-                        	        currBid=newBid;
-                	        }
-                        	else{
-                                	cout << "This bid is not higher than the previous bid, your turn will be skipped." << endl;
-                        		continue;
-				}
-                	}
-        	        index++;
-                	if(index == numPlayers){
-                        	index = 0;
-                	}
-			break;
-		}
+                cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
+                cin >> option;
+                if(option == "withdraw"){
+                        withdraw[index] = true;
+                        auctioneers--;
+                }
+                // Excepting the user to enter a higher, positive valid bid than previous user
+                else if(option == "bid"){
+                        while( true ){
+				string newBid;        
+		               	bool command = true;
+                        	cout << "Enter bid value: " << endl;
+                        	cin >> newBid;
+                        	if(newBid == "withdraw"){
+                                	withdraw[index] = true;
+                                	auctioneers--;
+                                	break;
+                        	}
+                        	for(size_t i = 0; i < newBid.length(); i++){
+                                	if(!isdigit(newBid[i])){                                                                                                                                                            cout << "Invalid command entered." << endl;                                                                                                                                 command = false;
+                                        	break;
+                                	}
+                        	}
+                        	if(command){                                                                                                                                                                        int newBidInt = stoi(newBid);
+                                	if(newBidInt > currBid){
+                                        	currBid = newBidInt;
+                                        	break;
+                                	}
+                                else
+                                        cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
+                        	}
+                   	}
+                }
+                index++;
+                if(index == numPlayers){
+                        index = 0;
+                }
         }
         int winner = 0;
         for (int i=0; i<numPlayers; i++){
@@ -115,7 +124,6 @@ void AcademicProperty::auction(){
                 }
         }
         buy(players[winner], currBid);
-	notifyObservers();
 
 
 }
@@ -123,10 +131,8 @@ void AcademicProperty::auction(){
 void AcademicProperty::improveBuy(shared_ptr<Player> player){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
-		cout << "First undo the mortgage" << endl;
-		return;
 	}
-	if(!isMortgaged() && getImprovementLevel()<5 && getOwner()!=nullptr && player->getName() == getOwner()->getName() && isMonopolyBlockValid()){
+	if(!isMortgaged() && isOwned() && player->getName() == getOwner()->getName() && isMonopolyBlockValid()){
 		int subMoney = tuition[getImprovementLevel() + 1];
 		int max_imp_level = tuition.size()-1;
 		if(getImprovementLevel() < max_imp_level && player->getMoney()- subMoney >= 0){
@@ -137,44 +143,36 @@ void AcademicProperty::improveBuy(shared_ptr<Player> player){
 			cout << "Not enough money to improve. " << endl;
 		}
 	}
-	notifyObservers();
 }
 
 void AcademicProperty::improveSell (shared_ptr<Player> player){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(!isMortgaged() && getImprovementLevel()>0 && getOwner()!=nullptr && player->getName() == getOwner()->getName() && isMonopolyBlockValid() && getImprovementLevel()>0){
+        if(!isMortgaged() && isOwned() && player->getName() == getOwner()->getName() && isMonopolyBlockValid() && getImprovementLevel()>0){
                 int add = improvementCost * 0.5; 
 		player->addMoney(add);  
 		setImprovementLevel(getImprovementLevel()-1);
-	}       
-	notifyObservers();
+        }
 }
 
 void AcademicProperty::payTuition(shared_ptr<Player> tenant){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-        if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){    
+        if(isOwned() && !isMortgaged() && tenant->getName() != getOwner()->getName()){    
 		int subMoney = 0;
 		subMoney = tuition[getImprovementLevel()];
-                if (isMonopolyBlockValid()&&getImprovementLevel()==0){
-			subMoney*=2;
-		}
+                
 		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
                 if(tenant->isBankrupt()){
-                        if (getBoard()->getPlayers().size()<3){
-				cout << "Game has ended." << endl;
-				return;
-			}
-			cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
+                        cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
                         getOwner()->addMoney(tenant->getMoney());
                         vector<shared_ptr<Square>> squares = tenant->getSquares();
                         int numPropertiesTenant = squares.size();
                         for (int i=0; i<numPropertiesTenant; i++){
                                 auto square = squares[i];
-                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
+                                tenant->transferProperty(getOwner(), square);
                         }
                         for (int i=0; i<tenant->getTimCups(); i++){
                                 getOwner()->addTimCup();
@@ -202,16 +200,14 @@ void AcademicProperty::unmortgage(shared_ptr<Player> player){
                         cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
                 }
         }
-	notifyObservers();
 }
 
 void AcademicProperty::mortgage(shared_ptr<Player> player){
-        if(!mortgaged && getImprovementLevel()==0 && getOwner()->getName() == player->getName()){
+        if(!mortgaged && getOwner()->getName() == player->getName()){
                 player->addMoney(getCost() / 2);
                 mortgaged = true;
         	setImprovementLevel(-1);
 	}
-	notifyObservers();
 }
 
 
@@ -249,4 +245,3 @@ bool AcademicProperty::isMonopolyBlockValid(){
 	return true;
 	
 }
-

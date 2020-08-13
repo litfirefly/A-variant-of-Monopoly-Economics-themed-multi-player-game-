@@ -8,7 +8,7 @@ using namespace std;
 
 
 Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): 
-	Square{board, name, "", position, res_price, owner, 0, true, false}, 
+	Square{board, name, "", position, res_price, owner, getImprovementLevel(), true, false}, 
 	owned{false}, mortgaged{mortgaged} {
 		if(getOwner()){
 			owned=true;
@@ -50,7 +50,7 @@ void Residences::buy(shared_ptr<Player> player, int price){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-	if(!getOwner()){
+	if(!isOwned()){
 		if(player->getMoney() - price >= 0){
 			player->subtractMoney(price, getBoard()->getPlayers());
 			owned = true;
@@ -67,14 +67,13 @@ void Residences::buy(shared_ptr<Player> player, int price){
 	else{
 		cout << getOwner()->getName() << " owns " << getName() << "." << endl;
 	}
-	notifyObservers();
 }
 
 void Residences::payRent(shared_ptr<Player> tenant){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-	if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){
+	if(isOwned() && !isMortgaged() && tenant->getName() == getOwner()->getName()){
 		int subMoney = 0;
 		int res = getOwner()->getResNum();
 		if(res == 1)
@@ -88,17 +87,13 @@ void Residences::payRent(shared_ptr<Player> tenant){
 
 		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
                 if(tenant->isBankrupt()){
-                        if (getBoard()->getPlayers().size()<3){
-				cout << "Game has ended." << endl;
-				return;
-			}
                         cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
                         getOwner()->addMoney(tenant->getMoney());
                         vector<shared_ptr<Square>> squares = tenant->getSquares();
                         int numPropertiesTenant = squares.size();
                         for (int i=0; i<numPropertiesTenant; i++){
                                 auto square = squares[i];
-                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
+                                tenant->transferProperty(getOwner(), square);
                         }
                         for (int i=0; i<tenant->getTimCups(); i++){
                                 getOwner()->addTimCup();
@@ -133,15 +128,30 @@ void Residences::auction(){
                 }
                 // Excepting the user to enter a higher, positive valid bid than previous user
                 else if(option == "bid"){
-                        int newBid=0;
-                        cout << "Enter bid value: " << endl;
-                        cin >> newBid;
-                        if (newBid>currBid){
-                                currBid=newBid;
-                        }
-                        else{
-                                cout << "This bid is not higher than the previous bid, your turn will be skipped." << endl;
-                        }
+			while( true ){
+                                string newBid;
+                                bool command = true;
+                                cout << "Enter bid value: " << endl;
+                                cin >> newBid;
+                                if(newBid == "withdraw"){
+                                        withdraw[index] = true;
+                                        auctioneers--;
+                                        break;
+                                }
+                                for(size_t i = 0; i < newBid.length(); i++){
+                                        if(!isdigit(newBid[i])){                                                                                                                                                            cout << "Invalid command entered." << endl;                                                                                                                                 command = false;
+                                                break;
+                                        }
+                                }
+                                if(command){                                                                                                                                                                        int newBidInt = stoi(newBid);
+                                        if(newBidInt > currBid){
+                                                currBid = newBidInt;
+                                                break;
+                                        }
+                                else
+                                        cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
+                                }
+                        }	
                 }
                 index++;
                 if(index == numPlayers){
@@ -165,7 +175,6 @@ void Residences::mortgage(shared_ptr<Player> player){
 		mortgaged = true;
 		setImprovementLevel(-1);
 	}
-	notifyObservers();
 }
 
 void Residences::unmortgage(shared_ptr<Player> player){
@@ -183,7 +192,6 @@ void Residences::unmortgage(shared_ptr<Player> player){
 			cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
 		}
 	}
-	notifyObservers();
 }
 
 bool Residences::isOwned(){

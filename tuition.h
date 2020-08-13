@@ -12,4 +12,3 @@ class Tuition : public Square {
 };
 
 #endif
-

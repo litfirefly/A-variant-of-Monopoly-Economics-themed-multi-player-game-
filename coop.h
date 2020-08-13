@@ -14,4 +14,3 @@ class Coop : public Square {
 };
 
 #endif
-

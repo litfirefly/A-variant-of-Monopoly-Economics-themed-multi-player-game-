@@ -20,33 +20,18 @@ int main(int argc, char* argv[]){
 			}
 		}
 	}
-
-	if (testing){
-		cout << "You have started Watopoly in Testing Mode." << endl;
-		game->setTesting();
-	}
-	bool error=false;
 	if (load_file!=""){
-		try{
-			shared_ptr<Board> temp = make_shared<Board>();
-			if(testing){
-				temp->setTesting();
-			}
-			cout << "You have loaded the file: " << load_file << endl;
-			temp->loadGame(load_file);
-			game = temp;
-		}
-		catch(const std::invalid_argument& ia){
-			error = true;
-			cerr << ia.what() << endl;
-			cout << "Error with loading, play will now resume normally" << endl;
-		}
+		cout << "You have loaded the file: " << load_file << endl;
+		game->loadGame(load_file);
 	}
-	cout << "here" << endl;
-	if (load_file!=""&&!error){
-		game->playTurn();
-	}
+
 	else{
+		if (testing){
+			cout << "You have started Watopoly in Testing Mode." << endl;
+			game->setTesting();
+		}
+	
+	
 		cout << "How many players will be playing today?" << endl;
 		int count_players = 0;
 		string num = "";
@@ -72,4 +57,3 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
-

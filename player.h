@@ -19,7 +19,6 @@ class Player : public std::enable_shared_from_this<Player>{
 	int numOfGyms;
 	int timCups;
 	std::vector<std::shared_ptr<Square>> squaresOwned;
-	std::vector<int> jailLastRoll;
 public:
 	Player(char piece, std::string name, int money, int position, int timCups);
 	std::vector<std::shared_ptr<Square>> getSquares();
@@ -44,13 +43,12 @@ public:
 	void useTimCup();
 	void printPlayerAssets();
 	void transferMoney(std::shared_ptr<Player> to, int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
-	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<Square> square, std::vector<std::shared_ptr<Player>> players);
+	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<Square> square);
 	void addSquare(std::shared_ptr<Square>);
 	void addMoney(int amount);
 	void subtractMoney(int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
 	void move(int position);
-	std::vector<int> getJailLastRoll();
-	void setJailLastRoll(std::vector<int> roll);	
+	
 };
 
 #endif

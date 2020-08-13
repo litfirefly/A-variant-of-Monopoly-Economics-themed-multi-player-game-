@@ -1,15 +1,9 @@
 #include "subject.h"
 #include "observer.h"
-#include <memory>
-void Subject::attach(std::shared_ptr<Observer> o) { observers.emplace_back(o); }
+
+void Subject::attach(Observer *o) { observers.emplace_back(o); }
 
 void Subject::notifyObservers() {
-    for (auto &ob : observers) ob->notify( shared_from_this() );
+    for (auto &ob : observers) ob->notify( *this );
 }
-
-std::string Subject::getName(){
-	return getName();
-}
-
-Subject::~Subject(){}
 
