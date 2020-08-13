@@ -12,3 +12,4 @@ class GooseNesting : public Square {
 };
 
 #endif
+

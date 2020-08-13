@@ -6,7 +6,7 @@
 using namespace std;
 
 
-Osap::Osap(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, -1, nullptr, -1, false, false} {}
+Osap::Osap(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 void Osap::action(shared_ptr<Player> player){
 	collectMoney(player);
 }
@@ -14,3 +14,5 @@ void Osap::collectMoney(shared_ptr<Player> player){
 	cout << "Collected Money from OSAP!!!" << endl;
 	player->addMoney(money);
 }
+
+

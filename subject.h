@@ -1,17 +1,19 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 #include <vector>
-
-// DO NOT MODIFY THIS FILE!
+#include <memory>
 
 class Observer;
 
-class Subject {
-    std::vector<Observer*> observers;
+class Subject: public std::enable_shared_from_this <Subject>{
+    std::vector<std::shared_ptr<Observer>> observers;
 
   public:
-    void attach(Observer *o);  
+    void attach(std::shared_ptr<Observer> o);  
     void notifyObservers();
+    virtual ~Subject()=0;
+    virtual std::string getName()=0;
+
 };
 
 #endif

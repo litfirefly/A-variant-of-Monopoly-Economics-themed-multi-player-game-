@@ -13,3 +13,4 @@ class NeedlesHall : public Square {
 };
 
 #endif
+

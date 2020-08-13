@@ -8,7 +8,7 @@ using namespace std;
 
 
 Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): 
-	Square{board, name, "", position, res_price, owner, getImprovementLevel(), true, false}, 
+	Square{board, name, "", position, res_price, owner, 0, true, false}, 
 	owned{false}, mortgaged{mortgaged} {
 		if(getOwner()){
 			owned=true;
@@ -25,7 +25,11 @@ void Residences::action(shared_ptr<Player> player){
 		}
                 
 		cout << "You have landed on " << getName() << "." << endl;
-                if (getOwner()==nullptr){
+		if (getOwner()==nullptr && getCost()>player->getMoney()){
+			cout << "No one owns this property but you don't have enough money to normally buy it, so it will be auctioned." << endl;
+			auction();
+		}
+		else if (getOwner()==nullptr){
                         cout << "Noone owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
                         string line = "";
                         cin >> line;
@@ -50,7 +54,7 @@ void Residences::buy(shared_ptr<Player> player, int price){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-	if(!isOwned()){
+	if(!getOwner()){
 		if(player->getMoney() - price >= 0){
 			player->subtractMoney(price, getBoard()->getPlayers());
 			owned = true;
@@ -67,13 +71,14 @@ void Residences::buy(shared_ptr<Player> player, int price){
 	else{
 		cout << getOwner()->getName() << " owns " << getName() << "." << endl;
 	}
+	notifyObservers();
 }
 
 void Residences::payRent(shared_ptr<Player> tenant){
 	if (getImprovementLevel()==-1){
 		mortgaged=true;
 	}
-	if(isOwned() && !isMortgaged() && tenant->getName() == getOwner()->getName()){
+	if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){
 		int subMoney = 0;
 		int res = getOwner()->getResNum();
 		if(res == 1)
@@ -87,13 +92,17 @@ void Residences::payRent(shared_ptr<Player> tenant){
 
 		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
                 if(tenant->isBankrupt()){
+                        if (getBoard()->getPlayers().size()<3){
+				cout << "Game has ended." << endl;
+				return;
+			}
                         cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
                         getOwner()->addMoney(tenant->getMoney());
                         vector<shared_ptr<Square>> squares = tenant->getSquares();
                         int numPropertiesTenant = squares.size();
                         for (int i=0; i<numPropertiesTenant; i++){
                                 auto square = squares[i];
-                                tenant->transferProperty(getOwner(), square);
+                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
                         }
                         for (int i=0; i<tenant->getTimCups(); i++){
                                 getOwner()->addTimCup();
@@ -106,8 +115,10 @@ void Residences::payRent(shared_ptr<Player> tenant){
 }
 
 void Residences::auction(){ 
-	bool notBought = false;
-        auto players = getBoard()->getPlayers();
+
+	setImprovementLevel(0);
+	mortgaged=false;
+   	auto players = getBoard()->getPlayers();
         int numPlayers = players.size();
         int auctioneers = players.size();
         vector<bool> withdraw;
@@ -115,63 +126,87 @@ void Residences::auction(){
                 withdraw.push_back(false);
         }
         int currBid = 0;
+	bool noBids = true;
         cout << "The starting bid is: $ " << currBid << "." << endl;
         int index=0;
-        while (auctioneers!=1){
+        while (auctioneers != 0){
                 string option;
+		if (players[index]->isBankrupt()){
+			auctioneers--;
+			withdraw[index]=true;
+			index = (index+1)%numPlayers;
+			while (withdraw[index]){
+				index=(index+1)%numPlayers;
+			}
+			continue;
+		}
+		if (auctioneers==1 && !noBids){
+			break;
+		}
                 cout << "The current bid is: $ " << currBid << "." << endl;
                 cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
                 cin >> option;
-                if(option == "withdraw"){
+		if(option == "withdraw"){
                         withdraw[index] = true;
                         auctioneers--;
                 }
-                // Excepting the user to enter a higher, positive valid bid than previous user
                 else if(option == "bid"){
-			while( true ){
-                                string newBid;
-                                bool command = true;
-                                cout << "Enter bid value: " << endl;
-                                cin >> newBid;
-                                if(newBid == "withdraw"){
-                                        withdraw[index] = true;
-                                        auctioneers--;
-					if(auctioneers == 0){
-                                                cout << "No one would like to buy this property. Please proceed as normal." << endl;
-                                                notBought = true;
-                                        }
-                                        break;
-                                }
-                                for(size_t i = 0; i < newBid.length(); i++){
-                                        if(!isdigit(newBid[i])){                                                                                                                                                            cout << "Invalid command entered." << endl;                                                                                                                                 command = false;
-                                                break;
-                                        }
-                                }
-                                if(command){                                                                                                                                                                        int newBidInt = stoi(newBid);
-                                        if(newBidInt > currBid){
-                                                currBid = newBidInt;
-                                                break;
-                                        }
-                                else
-                                        cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
-                                }
-                        }	
-                }
-                index++;
-                if(index == numPlayers){
-                        index = 0;
-                }
+                        while( true ){
+				string newBid;        
+                        	cout << "Enter bid value: " << endl;
+                        	cin >> newBid;
+                        	if(newBid == "withdraw"){
+                                	withdraw[index] = true;
+                                	auctioneers--;
+                                	break;
+                        	}
+				try{
+					int newBidInt = stoi(newBid);
+					if (newBidInt>players[index]->getMoney()){
+						cout << "You cant afford this bid, withdraw, or enter a lower bid" << endl;
+						continue;	
+					}
+					if (newBidInt>currBid){
+						noBids=false;
+						currBid=newBidInt;
+						break;
+					}
+					else{
+                                        	cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
+						continue;
+					}
+
+				}
+				catch(invalid_argument &ia){	
+                                        cout << "Enter a valid bid  or 'withdraw': " << endl;
+					continue;
+				}
+                   	}
+		}
+		else{
+			cout << "Enter either 'bid' or 'withdraw'" << endl;
+		}
+		if (auctioneers==1){
+			continue;
+		}
+		index = (index+1)%numPlayers;
+		while (withdraw[index]){
+			index=(index+1)%numPlayers;
+		}
+
         }
-	if(!notBought){
-        	int winner = 0;
-        	for (int i=0; i<numPlayers; i++){
-                	if(!withdraw[i]){
-                        	winner=i;
-                        	break;
-                	}
-        	}
-        	buy(players[winner], currBid);
+	if (noBids){
+		return;
 	}
+        int winner = 0;
+        for (int i=0; i<numPlayers; i++){
+                if(!withdraw[i]){
+                        winner=i;
+                        break;
+                }
+	}
+        buy(players[winner], currBid);
+	notifyObservers();
 }
 
 
@@ -181,6 +216,7 @@ void Residences::mortgage(shared_ptr<Player> player){
 		mortgaged = true;
 		setImprovementLevel(-1);
 	}
+	notifyObservers();
 }
 
 void Residences::unmortgage(shared_ptr<Player> player){
@@ -198,6 +234,7 @@ void Residences::unmortgage(shared_ptr<Player> player){
 			cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
 		}
 	}
+	notifyObservers();
 }
 
 bool Residences::isOwned(){
