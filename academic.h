@@ -1,6 +1,9 @@
 #ifndef _ACADEMICPROPERTY_H_
 #define _ACADEMICPROPERTY_H_
 
+
+#include <iostream>              
+#include "player.h"
 #include "square.h"
 
 class AcademicProperty: public Square {

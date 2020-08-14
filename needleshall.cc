@@ -1,11 +1,4 @@
 #include "needleshall.h"
-#include "player.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <stdlib.h>
-#include <time.h>
 using namespace std;
 
 NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string name, int position) : Square{board,name, "", position, 0, nullptr, 0, false, false} {}

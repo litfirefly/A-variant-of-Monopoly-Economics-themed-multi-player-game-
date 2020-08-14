@@ -1,12 +1,4 @@
 #include "dcTimsLine.h"
-#include "player.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <stdlib.h>
-#include <time.h>
-#include <sstream>
 using namespace std;
 
 

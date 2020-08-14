@@ -2,11 +2,12 @@
 #define _BOARD_H_
 #include <string>
 #include <vector>
-#include <map>
 #include <memory>
-#include "square.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
 #include "player.h"
-
 class Square;
 class Player;
 class TextDisplay;

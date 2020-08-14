@@ -1,8 +1,6 @@
 #ifndef _OSAP_H_
 #define _OSAP_H_
-#include <string>
-#include <vector>
-#include <memory>
+#include <iostream>
 #include "square.h"
 
 class Osap : public Square {

@@ -4,6 +4,7 @@
 #include <cstddef> 
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "observer.h"
 #include "square.h"
 class Board;

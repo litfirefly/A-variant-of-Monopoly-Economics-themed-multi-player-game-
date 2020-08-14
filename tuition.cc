@@ -1,8 +1,4 @@
 #include "tuition.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <iostream>
 using namespace std;
 
 Tuition::Tuition(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}

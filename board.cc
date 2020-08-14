@@ -11,14 +11,6 @@
 #include "slc.h"
 #include "tuition.h"
 #include "textdisplay.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <map>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
 using namespace std;
 
 
@@ -116,7 +108,7 @@ void Board::initialize(int numPlayers){
 					cout << "Name already taken." << endl;
 					taken = true;
 					break;
-				}
+				}			
 			}
 			if(!taken)
 				break;

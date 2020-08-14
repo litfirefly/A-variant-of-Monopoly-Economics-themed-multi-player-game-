@@ -1,7 +1,4 @@
 #include "player.h"
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
 using namespace std;
 
 Player::Player(char piece, std::string name, int money, int position, int timCups): piece{piece}, name{name}, bankrupt{false},

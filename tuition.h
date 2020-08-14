@@ -1,8 +1,6 @@
 #ifndef _TUITION_H_
 #define _TUITION_H_
-#include <string>
-#include <vector>
-#include <memory>
+#include <iostream>
 #include "square.h"
 
 class Tuition : public Square {

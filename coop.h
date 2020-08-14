@@ -1,8 +1,7 @@
 #ifndef _COOP_H_
 #define _COOP_H_
-#include <string>
-#include <vector>
-#include <memory>
+
+#include <iostream>
 #include "square.h"
 
 class Coop : public Square {

@@ -1,11 +1,4 @@
 #include "gym.h"
-#include "player.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <stdlib.h>
-#include <time.h>
 using namespace std;
 
 Gym::Gym(std::shared_ptr<Board> board,std::string name, int position): 

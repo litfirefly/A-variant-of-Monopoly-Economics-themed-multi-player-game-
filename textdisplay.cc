@@ -1,9 +1,4 @@
 #include "textdisplay.h"
-#include "observer.h"
-#include "subject.h"
-#include <cstddef> 
-#include <vector>
-#include <fstream>
 using namespace std;
 
 TextDisplay::TextDisplay(shared_ptr<Board> game): game{game} {

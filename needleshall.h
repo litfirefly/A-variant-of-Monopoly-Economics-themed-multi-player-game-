@@ -1,8 +1,10 @@
 #ifndef _NEEDLESHALL_H_
 #define _NEEDLESHALL_H_
-#include <string>
-#include <vector>
-#include <memory>
+
+#include "player.h"
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
 #include "square.h"
 
 class NeedlesHall : public Square {

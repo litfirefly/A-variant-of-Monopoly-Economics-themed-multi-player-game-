@@ -1,8 +1,11 @@
 #ifndef _DCTIMSLINE_H_
 #define _DCTIMSLINE_H_
-#include <string>
-#include <vector>
-#include <memory>
+
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <sstream>
+#include "player.h"
 #include "square.h"
 
 class DCTimsLine : public Square {

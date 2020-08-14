@@ -1,9 +1,4 @@
 #include "residences.h"
-#include "player.h"
-#include <memory>
-#include <string>
-#include <vector>
-#include <iostream>
 using namespace std;
 
 

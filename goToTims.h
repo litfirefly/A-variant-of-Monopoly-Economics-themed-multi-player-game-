@@ -1,8 +1,8 @@
 #ifndef _GOTOTIMS_H_  
 #define _GOTOTIMS_H_ 
-#include <string> 
-#include <vector>  
-#include <memory>
+
+#include <iostream>
+#include "player.h"
 #include "square.h"
 
 class GoToTims : public Square {  

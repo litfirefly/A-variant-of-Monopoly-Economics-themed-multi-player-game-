@@ -1,8 +1,8 @@
 #ifndef _GOOSENESTING_H_
 #define _GOOSENESTING_H_
-#include <string>
-#include <vector>
-#include <memory>
+
+#include <iostream>
+#include <fstream>
 #include "square.h"
 
 class GooseNesting : public Square {

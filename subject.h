@@ -2,7 +2,7 @@
 #define SUBJECT_H
 #include <vector>
 #include <memory>
-
+#include "observer.h"
 class Observer;
 
 class Subject: public std::enable_shared_from_this <Subject>{

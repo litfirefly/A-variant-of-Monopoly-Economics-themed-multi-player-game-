@@ -1,8 +1,9 @@
 #ifndef _GYM_H_
 #define _GYM_H_
-#include <string>
-#include <vector>
-#include <memory>
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include "player.h"
 #include "square.h"
 class Gym : public Square{
  private:
