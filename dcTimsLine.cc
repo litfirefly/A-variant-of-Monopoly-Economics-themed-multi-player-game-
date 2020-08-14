@@ -13,6 +13,7 @@ using namespace std;
 DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void DCTimsLine::action(shared_ptr<Player> player){
+	cout << "You are in jail." << endl;
 	bool pay=true;
 	while(true){
 		if (player->getJailTurns()==2){
@@ -132,7 +133,8 @@ void DCTimsLine::payJailFee(shared_ptr<Player> player){
 			vector<shared_ptr<Square>> squares = player->getSquares();
 			int numProperties = squares.size();
 			for (int i=0; i<numProperties; i++){
-	       			auto square = squares[i];
+	       			shared_ptr<Square> square = squares[i];
+				square->setOwner(nullptr);
 	      		 	square->auction();
 			}
 			getBoard()->setRollUpCards(getBoard()->getRollUpCards()-player->getTimCups());

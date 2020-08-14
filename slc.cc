@@ -17,51 +17,43 @@ void SLC::action(shared_ptr<Player> player){
 	if(val == 100 && getBoard()->getRollUpCards()!= 4){
 		player->addTimCup();
 		getBoard()->setRollUpCards(getBoard()->getRollUpCards()+1);
-		cout << "got tim" << endl;
+		cout << "You recieved a roll up the rims tims card from landing on SLC!" << endl;
 	}
 	else{
-		player->move(-2);
-
-		val = rand() % 1000 + 1;
-		
+		val = rand() % 1000 + 1;	
 		if(val >= 1 && val < 126){
-			cout << "Moved -3" << endl;
+			cout << "You moved back 3 spaces from  landing on SLC." << endl;
 			player->move(-3);	
+
 		}
 		else if(val >= 126 && val < 292){
-			// back 2
-			cout << "Moved -2" << endl;
+			cout << "You moved back 2 spaces from  landing on SLC." << endl;
 			player->move(-2);
 		}
 		else if(val >= 292 && val < 459){
-			// back 1
-			
-			cout << "Moved back 1" << endl;
+			cout << "You moved back 1 space from  landing on SLC." << endl;
 			player->move(-1);
 		}
 		else if(val >= 459 && val < 584){
-			// forward 1
-			cout << "Moved up 1" << endl;
+			cout << "You moved up 1 space from  landing on SLC." << endl;
 			player->move(1);
 		}
 		else if(val >= 584 && val < 752){ 
-			// forward 2 
-			cout << "Moved up 2" << endl;
+			cout << "You moved up 2 spaces from  landing on SLC." << endl;
 			player->move(2);  
 		} 
 		else if(val >= 752 && val < 918){   
-			// forward 3
-			cout << "Moved up 3" << endl;
+			cout << "You moved up 3 spaces from  landing on SLC." << endl;
 			player->move(3);
 		} 
 		else if(val >= 918 && val < 960){  
-			cout << "Moved to jail" << endl;
+			cout << "You moved to Jail from  landing on SLC." << endl;
 			player->setPosition(getBoard()->getSquares()[10]->getPosition());	
 			player->setJail(true);
 			player->setJailTurns(0);
 		}
 		else{
-			cout << "Moved to osap" << endl;
+			cout << "You moved to OSAP from  landing on SLC." << endl;
 			player->setPosition(getBoard()->getSquares()[0]->getPosition());	
 		}
 	}

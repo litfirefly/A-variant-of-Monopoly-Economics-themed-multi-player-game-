@@ -11,16 +11,26 @@ class Square;
 class Player;
 class TextDisplay;
 class Board : public std::enable_shared_from_this<Board>{
+	
 	const int maxNumOfPlayers = 8;
-  	int numOfPlayers;
+	const int numOfSquares = 40;
+	const int jailSpace = 10;
+	const int goToJailSpace = 30;
+	const int osapSpace = 0;
+	const int playerStartingMoney = 1500;
+
+	int numOfPlayers;
 	int rollUpCards=0;
+	
 	std::vector<std::shared_ptr<Player>> playerList;
 	std::vector<std::shared_ptr<Square>> squares;
+	
 	const std::vector<std::string> pieces = {"G: Goose", "B: GRT Bus ", "D: Tim Hortons Doughnut", "P: Professor", "S: Student", "$: Money", "L: Laptop", "T: Pink Tie"};
 	const std::vector<int> ownableIndex = {1,3,5,6,8,9,11,12,13,14,15,16,18,19,21,23,24,25,26,27,28,29,31,32,34,35,37,39};
-	std::vector<bool> piecesChosen;
+	
 	bool testMode = false;
 	std::shared_ptr<TextDisplay> td;
+	
 	const std::vector<int> AL = {2, 10, 30, 90, 160, 250};
 	const std::vector<int> ML = {4, 20, 60, 180, 320, 450};
 	const std::vector<int> ECH = {6, 30, 90, 270, 400, 550};
@@ -33,7 +43,7 @@ class Board : public std::enable_shared_from_this<Board>{
 	const std::vector<int> BMH = {14, 70, 200, 550, 750, 950};
 	const std::vector<int> OPT = {16, 80, 220, 600, 800, 1000};
 	const std::vector<int> EV1 = {18, 90, 250, 700, 875, 1050};
-        const std::vector<int> EV2 = {18, 90, 250, 700, 875, 1050};
+    	const std::vector<int> EV2 = {18, 90, 250, 700, 875, 1050};
 	const std::vector<int> EV3 = {20, 100, 300, 750, 925, 1100};
 	const std::vector<int> PHYS = {22, 110, 330, 800, 975, 1150};
 	const std::vector<int> B1 = {22, 110, 330, 800, 975, 1150};
@@ -47,19 +57,21 @@ class Board : public std::enable_shared_from_this<Board>{
 	void trade(std::vector<std::string> command, int currPlayer);
 	void displayOption(std::shared_ptr<Player> player);
 	void initSquares();
+  
   public:
-        void initialize(int numOfPlayers);
-	void setTesting();
-	void playTurn();
-	void loadGame(std::string file);
-	void saveGame(std::string file, int index);
-	std::vector<int> rollDice(int d1, int d2);
 	std::vector<std::shared_ptr<Player>> getPlayers();
 	std::vector<std::shared_ptr<Square>> getSquares();
 	int getRollUpCards();
 	void setRollUpCards(int cards);
 	bool isInTestMode();
+	void setTesting();
+	
+	void initialize(int numOfPlayers);
+	void loadGame(std::string file);
+	void saveGame(std::string file, int index);
+	std::vector<int> rollDice(int d1, int d2);
+	void play();
+	
 };
-
 #endif
 

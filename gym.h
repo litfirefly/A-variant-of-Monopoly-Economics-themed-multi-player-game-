@@ -11,21 +11,17 @@ class Gym : public Square{
   int improvementCost;
   std::vector<int> tuition;
   bool gym = true;
-  bool owned;
-  bool mortgaged;	
+
  public:
-  Gym(std::shared_ptr<Board> board,std::string name, int position,  std::shared_ptr<Player> owner, bool mortgaged);
+  Gym(std::shared_ptr<Board> board,std::string name, int position,  std::shared_ptr<Player> owner);
  
   virtual void action(std::shared_ptr<Player> player) override; 
   virtual bool isGym() override;
   void buy(std::shared_ptr<Player> player, int price);
-  void payFee(std::shared_ptr<Player> player);
   void auction();
+  void payFee(std::shared_ptr<Player> player);
   void mortgage(std::shared_ptr<Player> player);
   void unmortgage(std::shared_ptr<Player> player);
-  
-  bool isOwned();
-  bool isMortgaged();
 };
 
 #endif

@@ -53,63 +53,58 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 		int row = (rown*6)+1;
 		int col = (coln*9);
 		if (square->getOwner()!=nullptr){
-			//O:79
-			//::58	
-			board[row+3][col+1]=79;
-			board[row+3][col+2]=58;
+			board[row+3][col+1]=O;
+			board[row+3][col+2]=COLON;
 			board[row+3][col+3]=square->getOwner()->getPiece();
 		}
 		else{
-			board[row+3][col+1]=32;
-			board[row+3][col+2]=32;
-			board[row+3][col+3]=32;
+			board[row+3][col+1]=SPACE;
+			board[row+3][col+2]=SPACE;
+			board[row+3][col+3]=SPACE;
 		}
 		
 		board[row+3][col+4]=32;
 		if (square->getImprovementLevel()>0){
-			//I:73
-			//V:86
 			if (square->getImprovementLevel()==1){
-				board[row+3][col+5]=73;
-				board[row+3][col+6]=32;
-				board[row+3][col+7]=32;
+				board[row+3][col+5]=I;
+				board[row+3][col+6]=SPACE;
+				board[row+3][col+7]=SPACE;
 			}
 			else if (square->getImprovementLevel()==2){
-				board[row+3][col+5]=73;
-				board[row+3][col+6]=73;
-				board[row+3][col+7]=32;
+				board[row+3][col+5]=I;
+				board[row+3][col+6]=I;
+				board[row+3][col+7]=SPACE;
 			}
 			else if (square->getImprovementLevel()==3){
-				board[row+3][col+5]=73;
-				board[row+3][col+6]=73;
-				board[row+3][col+7]=73;
+				board[row+3][col+5]=I;
+				board[row+3][col+6]=I;
+				board[row+3][col+7]=I;
 			}
 			else if (square->getImprovementLevel()==4){
-				board[row+3][col+5]=73;
-				board[row+3][col+6]=86;
-				board[row+3][col+7]=32;
+				board[row+3][col+5]=I;
+				board[row+3][col+6]=V;
+				board[row+3][col+7]=SPACE;
 			}
 			else if (square->getImprovementLevel()>4){
-				board[row+3][col+5]=86;
-				board[row+3][col+6]=32;
-				board[row+3][col+7]=32;
+				board[row+3][col+5]=V;
+				board[row+3][col+6]=SPACE;
+				board[row+3][col+7]=SPACE;
 			}
 		}
 		else{
-				board[row+3][col+5]=32;
-				board[row+3][col+6]=32;
-				board[row+3][col+7]=32;
+				board[row+3][col+5]=SPACE;
+				board[row+3][col+6]=SPACE;
+				board[row+3][col+7]=SPACE;
 		}
 		if (square->getImprovementLevel()==-1 || square->isMortgaged()){
-			//M: 77
-			board[row+3][col+8] = 77;
+			board[row+3][col+8] = M;
 		}
 		else{
-			board[row+3][col+8] = 32;
+			board[row+3][col+8] = SPACE;
 		}
 	
 		int count=0;
-		auto players = game->getPlayers();
+		vector<shared_ptr<Player>> players = game->getPlayers();
 		int playerssize = players.size();
 		for (int i=0; i<playerssize; i++){
 			if (players[i]->getPosition()==square->getPosition()){
@@ -118,7 +113,7 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 			}
 		}
 		for (int i=count; i<9;i++){
-			board[row+4][col+1+count]=32;
+			board[row+4][col+1+count]=SPACE;
 		}
 }
 void TextDisplay::print(){

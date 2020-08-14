@@ -7,24 +7,14 @@
 using namespace std;
 
 
-Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner, bool mortgaged): 
-	Square{board, name, "", position, res_price, owner, 0, true, false}, 
-	owned{false}, mortgaged{mortgaged} {
-		if(getOwner()){
-			owned=true;
-		}	
-}
+Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner): 
+	Square{board, name, "", position, res_price, owner, 0, true, false}{}
 
 bool Residences::isGym(){
 	return gym;
 }
 
 void Residences::action(shared_ptr<Player> player){
-		if (getImprovementLevel()==-1){
-			mortgaged=true;
-		}
-                
-		cout << "You have landed on " << getName() << "." << endl;
 		if (getOwner()==nullptr && getCost()>player->getMoney()){
 			cout << "No one owns this property but you don't have enough money to normally buy it, so it will be auctioned." << endl;
 			auction();
@@ -51,16 +41,11 @@ void Residences::action(shared_ptr<Player> player){
 }
 
 void Residences::buy(shared_ptr<Player> player, int price){
-	if (getImprovementLevel()==-1){
-		mortgaged=true;
-	}
 	if(!getOwner()){
 		if(player->getMoney() - price >= 0){
 			player->subtractMoney(price, getBoard()->getPlayers());
-			owned = true;
-			mortgaged = false;
 			setOwner(player);
-			player->addResNum();
+			player->addRes();
                         player->addSquare(getBoard()->getSquares()[getPosition()]);
                         cout << "You bought this property for " << getCost() << endl;
 		}
@@ -74,51 +59,10 @@ void Residences::buy(shared_ptr<Player> player, int price){
 	notifyObservers();
 }
 
-void Residences::payRent(shared_ptr<Player> tenant){
-	if (getImprovementLevel()==-1){
-		mortgaged=true;
-	}
-	if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){
-		int subMoney = 0;
-		int res = getOwner()->getResNum();
-		if(res == 1)
-			subMoney = 25;
-		else if(res == 2)
-			subMoney = 50;
-		else if(res == 3)
-			subMoney = 100;
-		else if(res == 4)
-			subMoney = 200;
-
-		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
-                if(tenant->isBankrupt()){
-                        if (getBoard()->getPlayers().size()<3){
-				cout << "Game has ended." << endl;
-				return;
-			}
-                        cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
-                        getOwner()->addMoney(tenant->getMoney());
-                        vector<shared_ptr<Square>> squares = tenant->getSquares();
-                        int numPropertiesTenant = squares.size();
-                        for (int i=0; i<numPropertiesTenant; i++){
-                                auto square = squares[i];
-                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
-                        }
-                        for (int i=0; i<tenant->getTimCups(); i++){
-                                getOwner()->addTimCup();
-                        }
-                }
-                else{
-                        getOwner()->addMoney(subMoney);
-                }
-	}
-}
-
 void Residences::auction(){ 
-
+	cout << "Commendicng auction for: " << getName() << "." << endl;
 	setImprovementLevel(0);
-	mortgaged=false;
-   	auto players = getBoard()->getPlayers();
+   	vector<shared_ptr<Player>> players = getBoard()->getPlayers();
         int numPlayers = players.size();
         int auctioneers = players.size();
         vector<bool> withdraw;
@@ -195,55 +139,90 @@ void Residences::auction(){
 		}
 
         }
-	if (noBids){
-		return;
-	}
+	
+       	if (noBids){
+                cout << "There were no bids for the auction so it ended";
+                return;
+        }
         int winner = 0;
         for (int i=0; i<numPlayers; i++){
                 if(!withdraw[i]){
                         winner=i;
                         break;
                 }
-	}
+        }
+        cout << players[winner]->getName() << " has won the auction, and purchased " << getName() << " for " << currBid << "." << endl;
         buy(players[winner], currBid);
-	notifyObservers();
 }
 
+void Residences::payRent(shared_ptr<Player> tenant){
+	if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){
+		int subMoney = 0;
+		int res = getOwner()->getResNum();
+		if(res == 1)
+			subMoney = 25;
+		else if(res == 2)
+			subMoney = 50;
+		else if(res == 3)
+			subMoney = 100;
+		else if(res == 4)
+			subMoney = 200;
+		cout << "The rent owed is " << subMoney << "." << endl;
+		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
+                if(tenant->isBankrupt()){
+                        if (getBoard()->getPlayers().size()<3){
+				cout << "Game has ended." << endl;
+				return;
+			}
+                        cout << tenant->getName() << " is now bankrupt. All assets go to " << getOwner()->getName() << endl;
+                        getOwner()->addMoney(tenant->getMoney());
+                        vector<shared_ptr<Square>> squares = tenant->getSquares();
+                        int numPropertiesTenant = squares.size();
+                        for (int i=0; i<numPropertiesTenant; i++){
+                                shared_ptr<Square> square = squares[i];
+                                tenant->transferProperty(getOwner(), square, getBoard()->getPlayers());
+                        }
+                        for (int i=0; i<tenant->getTimCups(); i++){
+                                getOwner()->addTimCup();
+                        }
+                }
+                else{
+                        getOwner()->addMoney(subMoney);
+                }
+	}
+}
 
 void Residences::mortgage(shared_ptr<Player> player){
-	if(!mortgaged){
-		player->addMoney(res_price / 2);
-		mortgaged = true;
-		setImprovementLevel(-1);
-	}
-	notifyObservers();
+       if (!getOwner()|| player->getName()!=getOwner()->getName()){
+                cout << "You are not the owner" << endl;
+                return;
+        }
+        if (isMortgaged()){
+                cout << "This property is already mortgaged." << endl;
+                return;
+        }
+        player->addMoney(getCost() / 2);
+        setImprovementLevel(-1);
+       	cout << "You have mortgaged " << getName() << "." << endl;
+
 }
 
 void Residences::unmortgage(shared_ptr<Player> player){
-	if (getImprovementLevel()==-1){
-		mortgaged=true;
-	}
-	if(mortgaged){
-		int subMoney = (res_price / 2) + (res_price * 0.1);
-		if(player->getMoney() - subMoney >= 0){
-			player->subtractMoney(subMoney, getBoard()->getPlayers());
-			mortgaged = false;
-			setImprovementLevel(0);
-		}
-		else{
-			cout << "You do not have enough funds to unmortgage " << getName() << "." << endl;
-		}
-	}
-	notifyObservers();
+        if (!getOwner()|| player->getName()!=getOwner()->getName()){
+                cout << "You are not the owner" << endl;
+                return;
+        }
+        if (!isMortgaged()){
+                cout << "This property is not mortgaged." << endl;
+                return;
+        }
+        int subMoney = (res_price / 2) + (res_price * 0.1);
+        if (player->getMoney()<subMoney){
+                cout << "You don't have enough money to unmortgage." << endl;
+                return;
+        }
+        player->subtractMoney(subMoney, getBoard()->getPlayers());
+        setImprovementLevel(0);
+       	cout << "You have unmortgaged " << getName() << "." << endl;
 }
 
-bool Residences::isOwned(){
-	return owned;
-}
-
-bool Residences::isMortgaged(){
-	if (getImprovementLevel()==-1){
-		mortgaged=true;
-	}
-	return mortgaged;
-}

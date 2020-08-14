@@ -4,8 +4,100 @@
 #include <stdexcept>
 using namespace std;
 
-Player::Player(char piece, std::string name, int money, int position, int timCups): piece{piece}, name{name}, position{position}, inJail{false}, jailTurns{-1}, 
-	bankrupt{false}, money{money}, numOfResidences{0}, numOfGyms{0}, timCups{timCups}{}
+Player::Player(char piece, std::string name, int money, int position, int timCups): piece{piece}, name{name}, bankrupt{false},
+	money{money}, position{position}, timCups{timCups}, numOfResidences{0}, numOfGyms{0}, inJail{false}, jailTurns{-1}{ }
+
+char Player::getPiece(){
+	return piece;
+}
+
+string Player::getName(){
+	return name;
+}
+
+bool Player::isBankrupt(){
+	return bankrupt;
+}
+
+int Player::getMoney(){
+	return money;
+}
+
+int Player::getPosition(){
+	return position;
+}
+
+void  Player::setPosition(int pos){
+	position = pos;
+}
+
+int Player::getTimCups(){
+	return timCups;
+}
+
+void Player::addTimCup(){
+	timCups++;
+}
+
+void Player::useTimCup(){
+	timCups--;
+}
+
+int Player::getGymNum(){
+	return numOfGyms; 
+}
+
+void Player::addGym(){
+	numOfGyms++;
+}
+
+int Player::getResNum(){
+	return numOfResidences;
+}
+
+void Player::addRes(){
+	numOfResidences++;
+}
+
+std::vector<std::shared_ptr<Square>> Player::getSquares(){
+	return squaresOwned;
+}
+
+bool Player::isInJail(){
+	return inJail;
+}
+
+void Player::setJail(bool jail){
+	inJail = jail;
+}
+
+int Player::getJailTurns(){
+	return jailTurns;
+}
+
+void Player::setJailTurns(int jt){
+	jailTurns = jt;
+}
+
+vector<int> Player::getJailLastRoll(){
+	return jailLastRoll;
+}
+
+void Player::setJailLastRoll(vector<int> roll){
+	jailLastRoll.clear();
+	jailLastRoll.push_back(roll[0]);
+	jailLastRoll.push_back(roll[1]);
+}
+
+int Player::getWorth(){
+	int property_worth = 0;
+	int size = squaresOwned.size();
+	for (int i=0; i<size; i++){
+		property_worth+=squaresOwned[i]->getValue();
+	}	
+	return property_worth+money;
+
+}
 
 void Player::printPlayerAssets(){
 	cout << "Name: " << name << endl;
@@ -38,161 +130,33 @@ void Player::printPlayerAssets(){
 	if (size>0){
 		cout << endl;
 	}
-	
 }
 
-
-
-void Player::transferMoney(std::shared_ptr<Player> to, int amount, std::vector<shared_ptr<Player>> otherPlayers){
-	try{
-		subtractMoney(amount, otherPlayers);
-		to->addMoney(amount);
-	}
-	catch(const invalid_argument& ia){
-			cerr << ia.what() << endl;
-	}
-}
-
-int Player::getMoney(){
-	return money;
-}
-
-string Player::getName(){
-	return name;
-}
-
-char Player::getPiece(){
-	return piece;
-}
-
-bool Player::isBankrupt(){
-	return bankrupt;
-}
-
-
-int Player::getResNum(){
-	return numOfResidences;
-}
-void Player::addResNum(){
-	numOfResidences++;
-}
-
-int Player::getJailTurns(){
-	return jailTurns;
-}
-void Player::setJailTurns(int jt){
-	jailTurns = jt;
-}
-
-bool Player::isInJail(){
-	return inJail;
-}
-void Player::setJail(bool jail){
-	inJail = jail;
-}
-
-int Player::getPosition(){
-	return position;
-}
-
-int Player::getWorth(){
-	int property_worth = 0;
-	int size = squaresOwned.size();
-	for (int i=0; i<size; i++){
-		property_worth+=squaresOwned[i]->getValue();
-	}	
-	return property_worth+money;
-
-}
-
-std::vector<std::shared_ptr<Square>> Player::getSquares(){
-	return squaresOwned;
-}
-
-int Player::getGymNum(){
-	return numOfGyms; 
-}
-
-void Player::addGym(){
-	numOfGyms++;
-}
-void Player::setGymNum(int num){
-	numOfGyms=num;
-}
-
-int Player::getTimCups(){
-	return timCups;
-}
-
-void Player::addTimCup(){
-	timCups++;
-}
-void Player::useTimCup(){
-	timCups--;
-}
-
-void  Player::setPosition(int pos){
-	position = pos;
-}
-
-void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square> square, vector<shared_ptr<Player>> players){
-	int found=-1;
-	int size = squaresOwned.size();
-	for (int i=0; i<size; i++){
-		if (squaresOwned[i]==square){
-			found = i;
-			break;
-		}
-	}
-	if (found==-1){
-		throw invalid_argument("Property Not Found");
-		return;
-	}
-
-	if (square->isMortgaged() || square->getImprovementLevel()==-1){
-		to->subtractMoney(square->getCost()*0.1, players);
-
-	}
-
-	if (square->isOwnable() && !square->isImprovable()){
-		if (square->isGym()){
-			numOfGyms--;
-			to->addGym();
-		}
-		else{
-			numOfResidences--;
-			to->addResNum();
-		}		
-	}	
-	squaresOwned.erase(squaresOwned.begin()+found);
-	to->addSquare(square);
-}
-
-void Player::addSquare(std::shared_ptr<Square> square){
-	squaresOwned.insert(squaresOwned.end(), square);
+void Player::move(int pos){
+	position+=pos;
 }
 
 void Player::addMoney(int amount){
 	if (amount<=0){
-		cout << "Trying to add an amount less than 0." << endl;
-		return;
+		cout << "You are trying to add an amount less than 0. This is an invalid operation." << endl;
 	}	
 	else if (bankrupt){
-		cout << "Player is bankrupt." << endl;
+		cout << "Player is bankrupt, and thus money can't be added." << endl;
 	}
 	else{
 		money+=amount;
-		cout << "You completed the transaction. Your current balance is now: " << money << endl;
+		cout <<  name << " now has a balance of  " << money << " after completeing the transaction." << endl;
 	}
 	return;
 }
+
 void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlayers) {
         if (bankrupt) {
-                throw invalid_argument("Player is bankrupt.");
+		cout << "Player is bankrupt, and thus money can't be subtracted." << endl;
                 return;
         } else if (money >= amount) {
                 money -= amount;
-                cout << "You completed the transaction. Your current balance is now: " << money << endl;
+		cout <<  name << " now has a balance of  " << money << " after completing the transaction." << endl;
         } else {
                 cout << "Your do not have enough money for this transaction. These are your assets: " << endl;
                 printPlayerAssets();
@@ -219,44 +183,34 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                         }
 
                         if (command[0] == "bankrupt") {
-                                bankrupt = true;
+                                cout << "You have chosen to declare bankruptcy. You will now be removed from the game." << endl;
+				bankrupt = true;
                                 return;
-                        } else if (command[0] == "mortgage") {
-                                if (command.size() > 1) {
+                        } else if (command[0] == "mortgage" && command.size()>1) {
                                         int size = squaresOwned.size();
                                         for (int i = 0; i < size; i++) {
                                                 if (squaresOwned[i] -> getName() == command[1]) {
                                                         if (!(squaresOwned[i] -> isOwnable())) {
-                                                                cout << "Square cannot be mortgaged." << endl;
+                                                                cout << squaresOwned[i]->getName() << "cannot be mortgaged." << endl;
                                                         } else {
-								cout << "player226" << endl;
                                                                 squaresOwned[i] -> mortgage(shared_from_this());
                                                         }
                                                         break;
                                                 }
                                         }
-                                }
-                                continue;
-                        } else if (command[0] == "improve") {
-                                if (command.size() != 3 || command[2] != "sell") {
-                                        cout << "invalid command" << endl;
-                                } else {
+                        } else if (command[0] == "improve" && command.size()>3 && command[2]=="sell") {
                                         int size = squaresOwned.size();
                                         for (int i = 0; i < size; i++) {
                                                 if (squaresOwned[i] -> getName() == command[1]) {
                                                         if (!(squaresOwned[i] -> isImprovable()) || squaresOwned[i] -> getImprovementLevel() < 1) {
-                                                                cout << "Square has no improvements." << endl;
+                                                                cout << squaresOwned[i]->getName() << "has no improvements." << endl;
                                                         } else {
                                                                 squaresOwned[i] -> improveSell(shared_from_this());
                                                         }
                                                         break;
                                                 }
                                         }
-                                }
-                                continue;
-                        } else if (command[0] == "trade") {
-
-                                if (command.size() == 4) {
+                        } else if (command[0] == "trade" && command.size()>4) {
                                         int index = -1;
                                         int size = otherPlayers.size();
                                         for (int i = 0; i < size; i++) {
@@ -266,7 +220,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 }
                                         }
                                         if (index == -1) {
-                                                cout << "Player doesn't exist" << endl;
+                                                cout << "Player: " << command[1]  <<" doesn't exist" << endl;
                                                 return;
                                         }
                                         shared_ptr < Player > other = otherPlayers[index];
@@ -288,22 +242,23 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         }
                                                 }
                                                 if (square_index == -1) {
-                                                        cout << "You don't own this square." << endl;
+                                                        cout << "You don't own "<< command[2] <<"." << endl;
                                                         continue;
                                                 }
 
                                                 if (squaresOwned[square_index] -> isImprovable()) {
                                                         string mono_block = squaresOwned[square_index] -> getMonopolyBlock();
                                                         for (int i = 0; i < numPropOwned; i++) {
-                                                                if (squaresOwned[i] -> getMonopolyBlock() == mono_block && squaresOwned[i] -> getImprovementLevel() > 0) {
-                                                                        cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
+                                                                if (squaresOwned[i]->getMonopolyBlock() == mono_block && squaresOwned[i]->getImprovementLevel() > 0) {
+                                                                        cout << squaresOwned[i]->getName() << " has improvements." << endl;
+									cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
                                                                         continue;
                                                                 }
                                                         }
                                                 }
 
                                                 if (other -> getMoney() < value) {
-                                                        cout << "The other player doesn't have enough money" << endl;
+                                                        cout << command[1] << "  doesn't have enough money" << endl;
                                                         continue;
                                                 }
                                                 cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
@@ -329,7 +284,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 }
                                         }
                                         if (square_index == -1) {
-                                                cout << "You don't own this square." << endl;
+                                                cout << "You don't own "<< command[2] <<"." << endl;
                                                 continue;;
                                         }
                                         vector < shared_ptr < Square >> otherSquares = other -> getSquares();
@@ -342,7 +297,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 }
                                         }
                                         if (square_index_other == -1) {
-                                                cout << command[1] << " doesn't own this square." << endl;
+                                                cout << command[1] << " doesn't own " << command[3] << "." << endl;
                                                 continue;
                                         }
 
@@ -350,6 +305,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 string mono_block = squaresOwned[square_index] -> getMonopolyBlock();
                                                 for (int i = 0; i < numPropOwned; i++) {
                                                         if (squaresOwned[i] -> getMonopolyBlock() == mono_block && squaresOwned[i] -> getImprovementLevel() > 0) {
+                                                                cout << squaresOwned[i]->getName() << " has improvements." << endl;
                                                                 cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
                                                                 continue;
                                                         }
@@ -360,6 +316,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 string mono_block = otherSquares[square_index_other] -> getMonopolyBlock();
                                                 for (int i = 0; i < numPropOwnedOther; i++) {
                                                         if (otherSquares[i] -> getMonopolyBlock() == mono_block && otherSquares[i] -> getImprovementLevel() > 0) {
+                                                                cout << squaresOwned[i]->getName() << " has improvements." << endl;
                                                                 cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
                                                                 continue;
                                                         }
@@ -374,7 +331,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                         transferProperty(other, squaresOwned[square_index], otherPlayers);
                                         other -> transferProperty(shared_from_this(), otherSquares[square_index_other], otherPlayers);
                                         continue;
-                                }
+                                
 			}
 			else if (command[0] == "all") {
                         	int numPlayers = otherPlayers.size();
@@ -387,21 +344,58 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                         cout << "Enter a valid command: " << endl;        
                 }
                 money -= amount;
-                cout << "You raised enough money, and paid the transaction. Your current balance is now: " << money << endl;
+		cout <<  name << " now has a balance of  " << money << " after raising enough money and completing the transaction." << endl;
         }
 }
 
-void Player::move(int pos){
-	position+=pos;
+
+void Player::addSquare(std::shared_ptr<Square> square){
+	cout << square->getName() << " given to " << name << "." << endl;
+	squaresOwned.insert(squaresOwned.end(), square);
 }
 
-
-vector<int> Player::getJailLastRoll(){
-	return jailLastRoll;
+void Player::transferMoney(std::shared_ptr<Player> to, int amount, std::vector<shared_ptr<Player>> otherPlayers){
+	try{
+		subtractMoney(amount, otherPlayers);
+		to->addMoney(amount);
+		cout << amount << " transferred from " << name << " to " << to->getName() << "." << endl;
+	}
+	catch(const invalid_argument& ia){
+			cerr << ia.what() << endl;
+	}
 }
-void Player::setJailLastRoll(vector<int> roll){
-	jailLastRoll.clear();
-	jailLastRoll.push_back(roll[0]);
-	jailLastRoll.push_back(roll[1]);
+
+void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square> square, vector<shared_ptr<Player>> players){
+	int found=-1;
+	int size = squaresOwned.size();
+	for (int i=0; i<size; i++){
+		if (squaresOwned[i]==square){
+			found = i;
+			break;
+		}
+	}
+	if (found==-1){
+		cout << square->getName() << " not found. " << endl;
+		return;
+	}
+
+	if (square->isMortgaged() || square->getImprovementLevel()==-1){
+		cout << square->getName() << " was mortgaged, so the receipient paid 10 percent upfront." << endl;
+		to->subtractMoney(square->getCost()*0.1, players);
+	}
+
+	if (square->isOwnable() && !square->isImprovable()){
+		if (square->isGym()){
+			numOfGyms--;
+			to->addGym();
+		}
+		else{
+			numOfResidences--;
+			to->addRes();
+		}		
+	}	
+	squaresOwned.erase(squaresOwned.begin()+found);
+	to->addSquare(square);
+	cout << square->getName() << " transferred from " << name << " to " << to->getName() << "." << endl;
 }
 

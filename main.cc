@@ -42,9 +42,8 @@ int main(int argc, char* argv[]){
 			cout << "Error with loading, play will now resume normally" << endl;
 		}
 	}
-	cout << "here" << endl;
 	if (load_file!=""&&!error){
-		game->playTurn();
+		game->play();
 	}
 	else{
 		cout << "How many players will be playing today?" << endl;
@@ -67,7 +66,7 @@ int main(int argc, char* argv[]){
 			break;
 		}
 		game->initialize(count_players);
-		game->playTurn();
+		game->play();
 	}
 
 	return 0;

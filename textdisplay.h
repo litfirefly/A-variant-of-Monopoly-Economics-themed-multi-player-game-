@@ -9,6 +9,12 @@
 class Board;
 
 class TextDisplay: public Observer {
+	    const char SPACE = 32;
+	    const char O = 79;
+	    const char COLON = 58;
+	    const char I = 73;
+	    const char V = 86;
+	    const char M = 77;
 	    std::shared_ptr<Board> game;
 	    std::vector<std::shared_ptr<Player>> players;
 	    std::vector<std::vector<char>> board;
