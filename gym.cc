@@ -8,8 +8,8 @@
 #include <time.h>
 using namespace std;
 
-Gym::Gym(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner): 
-	Square{board, name, "", position, gym_price, owner,0, true, false}{
+Gym::Gym(std::shared_ptr<Board> board,std::string name, int position): 
+	Square{board, name, "", position, gym_price, nullptr ,0, true, false}{
 }
 
 void Gym::action(shared_ptr<Player> player){

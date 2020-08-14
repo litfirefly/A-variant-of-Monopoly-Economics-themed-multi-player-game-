@@ -2,8 +2,8 @@
  
 Square::Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, 
 		int improvement_level, bool ownable, bool improvable):
-	board{board}, name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{owner}, 
-	improvement_level{improvement_level},ownable{ownable}, improvable{improvable}{}
+	board{board}, name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{nullptr}, 
+	improvement_level{0},ownable{ownable}, improvable{improvable}{}
 
 std::shared_ptr<Board> Square::getBoard(){
 	return board;
@@ -67,4 +67,3 @@ void Square::improveSell(std::shared_ptr<Player> player){}
 void Square::action(std::shared_ptr<Player> player){}
 void Square::auction(){}
 Square::~Square(){}
-

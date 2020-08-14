@@ -13,7 +13,7 @@ class Gym : public Square{
   bool gym = true;
 
  public:
-  Gym(std::shared_ptr<Board> board,std::string name, int position,  std::shared_ptr<Player> owner);
+  Gym(std::shared_ptr<Board> board,std::string name, int position);
  
   virtual void action(std::shared_ptr<Player> player) override; 
   virtual bool isGym() override;

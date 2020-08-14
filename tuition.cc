@@ -27,7 +27,6 @@ void Tuition::action(shared_ptr<Player> player){
 			continue;
 		}
 		player->subtractMoney(moneyOwed, getBoard()->getPlayers());
-		
 		if (player->isBankrupt()){
                         if (getBoard()->getPlayers().size()<3){
 				cout << "Game has ended." << endl;

@@ -7,8 +7,8 @@
 using namespace std;
 
 
-Residences::Residences(std::shared_ptr<Board> board,std::string name, int position, shared_ptr<Player> owner): 
-	Square{board, name, "", position, res_price, owner, 0, true, false}{}
+Residences::Residences(std::shared_ptr<Board> board,std::string name, int position): 
+	Square{board, name, "", position, res_price, nullptr, 0, true, false}{}
 
 bool Residences::isGym(){
 	return gym;

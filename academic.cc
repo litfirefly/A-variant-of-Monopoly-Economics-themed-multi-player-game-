@@ -7,9 +7,8 @@
 using namespace std;
 
 	
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, 
-		shared_ptr<Player> owner, int improvement_level, int improvementCost, vector<int> tuition): 
-			Square{board, name, monopolyBlock, position, cost, owner, improvement_level, true, true}, 
+AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, int improvementCost, vector<int> tuition): 
+			Square{board, name, monopolyBlock, position, cost, nullptr, 0, true, true}, 
 			improvementCost{improvementCost}, tuition{tuition}{	
 }
 

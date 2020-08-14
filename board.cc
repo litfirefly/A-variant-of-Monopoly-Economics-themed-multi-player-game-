@@ -16,7 +16,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
-#include<fstream>
+#include <fstream>
 #include <sstream>
 #include <stdexcept>
 using namespace std;
@@ -47,45 +47,45 @@ void Board::setTesting(){
 
 void Board::initSquares(){
 	squares.push_back(make_shared<Osap>(shared_from_this(), "Osap", 0));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "AL", "Arts1", 1, 40, nullptr, 0, 50, AL));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "AL", "Arts1", 1, 40, 50, AL));
 	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC1", 2));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ML", "Arts1", 3, 60, nullptr, 0, 50, ML));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ML", "Arts1", 3, 60, 50, ML));
 	squares.push_back(make_shared<Tuition>(shared_from_this(), "Tuition", 4));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "MKV", 5, nullptr));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ECH", "Arts2", 6 , 100, nullptr, 0, 50, ECH));
+	squares.push_back(make_shared<Residences>(shared_from_this(), "MKV", 5));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ECH", "Arts2", 6 , 100,  50, ECH));
 	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall1", 7));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PAS", "Arts2", 8, 100, nullptr, 0, 50, PAS));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "HH", "Arts2", 9, 120, nullptr, 0, 50, HH));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PAS", "Arts2", 8, 100, 50, PAS));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "HH", "Arts2", 9, 120, 50, HH));
 	squares.push_back(make_shared<DCTimsLine>(shared_from_this(), "DC Tims Line", 10));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "RCH", "Eng", 11, 140, nullptr, 0, 100, RCH));
-	squares.push_back(make_shared<Gym>(shared_from_this(), "PAC", 12, nullptr));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DWE", "Eng", 13, 140, nullptr, 0, 100, DWE));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "CPH", "Eng", 14, 160, nullptr, 0, 100, CPH));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "UWP", 15, nullptr));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "LHI", "Health", 16, 180, nullptr, 0, 100, LHI));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "RCH", "Eng", 11, 140, 100, RCH));
+	squares.push_back(make_shared<Gym>(shared_from_this(), "PAC", 12));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DWE", "Eng", 13, 140, 100, DWE));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "CPH", "Eng", 14, 160, 100, CPH));
+	squares.push_back(make_shared<Residences>(shared_from_this(), "UWP", 15));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "LHI", "Health", 16, 180, 100, LHI));
 	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC2", 17));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "BMH", "Health", 18, 180, nullptr, 0, 100, BMH));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "OPT", "Health", 19, 200, nullptr, 0, 100, OPT));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "BMH", "Health", 18, 180, 100, BMH));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "OPT", "Health", 19, 200, 100, OPT));
 	squares.push_back(make_shared<GooseNesting>(shared_from_this(), "Goose Nesting", 20));		
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV1", "Env", 21, 220, nullptr, 0, 150, EV1));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV1", "Env", 21, 220, 150, EV1));
 	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall2", 22));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV2", "Env", 23, 220, nullptr, 0, 150, EV2));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV3", "Env", 24, 240, nullptr, 0, 150, EV3));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "V1", 25, nullptr));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PHYS", "Sci1", 26, 260, nullptr, 0, 150, PHYS));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B1", "Sci1", 27, 260, nullptr, 0, 150, B1));
-	squares.push_back(make_shared<Gym>(shared_from_this(), "CIF", 28, nullptr));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B2", "Sci1", 29, 280, nullptr, 0, 150, B2));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV2", "Env", 23, 220, 150, EV2));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV3", "Env", 24, 240, 150, EV3));
+	squares.push_back(make_shared<Residences>(shared_from_this(), "V1", 25));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PHYS", "Sci1", 26, 260, 150, PHYS));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B1", "Sci1", 27, 260, 150, B1));
+	squares.push_back(make_shared<Gym>(shared_from_this(), "CIF", 28));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B2", "Sci1", 29, 280, 150, B2));
 	squares.push_back(make_shared<GoToTims>(shared_from_this(), "Go To Tims", 30));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EIT", "Sci2", 31, 300, nullptr, 0, 200, EIT));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ESC", "Sci2", 32, 300, nullptr, 0, 200, ESC));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EIT", "Sci2", 31, 300, 200, EIT));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ESC", "Sci2", 32, 300, 200, ESC));
 	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC3", 33));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "C2", "Sci2", 34, 320, nullptr, 0, 200, C2));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "REV", 35, nullptr));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "C2", "Sci2", 34, 320, 200, C2));
+	squares.push_back(make_shared<Residences>(shared_from_this(), "REV", 35));
 	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall3", 36));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "MC", "Math", 37, 350, nullptr, 0, 200, MC));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "MC", "Math", 37, 350, 200, MC));
 	squares.push_back(make_shared<Coop>(shared_from_this(), "Co-op Fee", 38));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DC", "Math", 39, 400, nullptr, 0, 200, DC));
+	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DC", "Math", 39, 400, 200, DC));
 	for (int i=0; i<numOfSquares; i++){
 		squares[i]->attach(td);
 		squares[i]->notifyObservers();
@@ -240,7 +240,8 @@ void Board::loadGame(string load){
                 playerList.push_back(player);
 		rollUpCards+=cups;
 	}
-	numOfPlayers=playerList.size();
+
+	numOfPlayers = playerList.size();
 	initSquares();
 	int numOwnable = ownableIndex.size();
 	for (int i=0; i<numOwnable; i++){
@@ -670,9 +671,9 @@ void Board::play(){
 					ended=true;
 				}
 			}
-
-			if(roll[0] != roll[1] || player->isBankrupt()){
-				doubles=0;			
+			if(roll[0] != roll[1] || player->isBankrupt() || player->isInJail()){
+				doubles=0;		
+				cout << numOfPlayers << endl;	
 				currPlayer = (currPlayer+1)%numOfPlayers;
 				cout << "It is now the next player's turn" << endl;
 				displayOption(playerList[currPlayer]);
@@ -693,7 +694,6 @@ void Board::play(){
 			
 				}
 			}
-			
 		}		
 		else if(command[0] == "next"){
 			if (!(player->isInJail())){

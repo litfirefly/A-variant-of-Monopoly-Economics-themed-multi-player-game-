@@ -8,8 +8,7 @@ class AcademicProperty: public Square {
 	std::vector<int> tuition;
 	
 public:
-  AcademicProperty(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, int improvement_level, 
-		  int improvementCost, std::vector<int> tuition);
+  AcademicProperty(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, int improvementCost, std::vector<int> tuition);
 
   virtual void action(std::shared_ptr<Player> player);
   void buy(std::shared_ptr<Player> player, int price);
