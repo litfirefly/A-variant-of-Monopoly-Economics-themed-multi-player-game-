@@ -59,7 +59,10 @@ int Square::getValue(){
 	return cost;
 }
 
-bool Square::isGym(){return false;}
+bool Square::isGym(){
+	return false;
+}
+
 void Square::mortgage(std::shared_ptr<Player> player){}
 void Square::unmortgage(std::shared_ptr<Player> player){}
 void Square::improveBuy(std::shared_ptr<Player> player){}

@@ -1,7 +1,7 @@
 #include "academic.h"
 using namespace std;
 
-	
+
 AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, int improvementCost, vector<int> tuition): 
 			Square{board, name, monopolyBlock, position, cost, nullptr, 0, true, true}, 
 			improvementCost{improvementCost}, tuition{tuition}{	
@@ -51,7 +51,6 @@ void AcademicProperty::buy(shared_ptr<Player> player, int price){
         else{
                 cout << getOwner()->getName() << " owns " << getName() << "." << endl;
         }
-	notifyObservers();
 }
 
 void AcademicProperty::auction(){
@@ -105,7 +104,6 @@ void AcademicProperty::auction(){
 						cout << "You cant afford this bid, withdraw, or enter a lower bid" << endl;
 						continue;
 					}
-					cout << "Here" << endl;
 					if (newBidInt>currBid){
 						noBids=false;
 						currBid=newBidInt;
@@ -154,8 +152,9 @@ void AcademicProperty::payTuition(shared_ptr<Player> tenant){
         if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){    
 		int subMoney = 0;
 		subMoney = tuition[getImprovementLevel()];
-                if (hasMonopoly()&&getImprovementLevel()==0){
+                if (hasMonopoly()&&getImprovementLevel()<1){
 			subMoney*=2;
+			cout << "Since the owner owns a monopoly of this unimproved property, the tuition is doubled." << endl;
 		}
 		cout << "The tuition owed is: " << subMoney << endl;
 		tenant->subtractMoney(subMoney, getBoard()->getPlayers());
@@ -186,7 +185,7 @@ void AcademicProperty::payTuition(shared_ptr<Player> tenant){
 
 void AcademicProperty::improveBuy(shared_ptr<Player> player){
 	if (!getOwner()|| player->getName()!=getOwner()->getName()){
-		cout << "You are not the owner" << endl;
+		cout << "You are not the owner." << endl;
 		return;
 	}	
 	if (isMortgaged()){
@@ -194,13 +193,14 @@ void AcademicProperty::improveBuy(shared_ptr<Player> player){
 		return;
 	}
 	if (getImprovementLevel()<5){
-		cout << "Already at max improvement" << endl;
+		cout << "Already at max improvement." << endl;
 		return;
 	}
 	if (!hasMonopoly()){
 		cout << "You don't have the full monopoly." << endl;
 		return;
 	}
+	cout << "The improvement cost is " << improvementCost << "." << endl;
 	if (player->getMoney()<improvementCost){
 		cout << "You don't have enough money." << endl;
 		return;
@@ -218,7 +218,7 @@ void AcademicProperty::improveBuy(shared_ptr<Player> player){
 
 void AcademicProperty::improveSell (shared_ptr<Player> player){        
 	if (!getOwner()|| player->getName()!=getOwner()->getName()){
-                cout << "You are not the owner" << endl;
+                cout << "You are not the owner." << endl;
                 return;
         }
         if (getImprovementLevel()<1){
@@ -226,6 +226,7 @@ void AcademicProperty::improveSell (shared_ptr<Player> player){
                 return;
         }
         int profit = improvementCost*0.5;
+	cout << "The money you get back is " << profit << "." << endl;
 	player->addMoney(profit);
         setImprovementLevel(getImprovementLevel()-1);
        	cout << "You have sold an improvement on " << getName() << "." << endl;
@@ -240,7 +241,7 @@ void AcademicProperty::improveSell (shared_ptr<Player> player){
 
 void AcademicProperty::mortgage(shared_ptr<Player> player){
         if (!getOwner()|| player->getName()!=getOwner()->getName()){
-                cout << "You are not the owner" << endl;
+                cout << "You are not the owner." << endl;
                 return;
         }
         if (isMortgaged()){
@@ -251,6 +252,7 @@ void AcademicProperty::mortgage(shared_ptr<Player> player){
                 cout << "Cannot mortgage a property with improvements." << endl;
                 return;
         }
+	cout << "The money you get from mortgaging is " << getCost()/2 << "." << endl;
         player->addMoney(getCost() / 2);
        	setImprovementLevel(-1);
        	cout << "You have mortgaged " << getName() << "." << endl;
@@ -258,7 +260,7 @@ void AcademicProperty::mortgage(shared_ptr<Player> player){
 
 void AcademicProperty::unmortgage(shared_ptr<Player> player){        
 	if (!getOwner()|| player->getName()!=getOwner()->getName()){
-                cout << "You are not the owner" << endl;
+                cout << "You are not the owner." << endl;
                 return;
         }
         if (!isMortgaged()){
@@ -266,6 +268,7 @@ void AcademicProperty::unmortgage(shared_ptr<Player> player){
                 return;
         }
         int subMoney = (getCost() / 2) + (getCost() * 0.1);
+	cout << "The money you owe from unmortgaging is " << subMoney << "." << endl;
         if (player->getMoney()<subMoney){
                 cout << "You don't have enough money to unmortgage." << endl;
                 return;
@@ -298,5 +301,4 @@ bool AcademicProperty::hasMonopoly(){
 		}
 	}
 	return true;
-	
 }

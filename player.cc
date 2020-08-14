@@ -195,7 +195,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         break;
                                                 }
                                         }
-                        } else if (command[0] == "improve" && command.size()>3 && command[2]=="sell") {
+                        } else if (command[0] == "improve" && command.size()>2 && command[2]=="sell") {
                                         int size = squaresOwned.size();
                                         for (int i = 0; i < size; i++) {
                                                 if (squaresOwned[i] -> getName() == command[1]) {
@@ -207,7 +207,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         break;
                                                 }
                                         }
-                        } else if (command[0] == "trade" && command.size()>4) {
+                        } else if (command[0] == "trade" && command.size()>3) {
                                         int index = -1;
                                         int size = otherPlayers.size();
                                         for (int i = 0; i < size; i++) {
@@ -218,7 +218,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                         }
                                         if (index == -1) {
                                                 cout << "Player: " << command[1]  <<" doesn't exist" << endl;
-                                                return;
+                                                continue;
                                         }
                                         shared_ptr < Player > other = otherPlayers[index];
                                         int value = -1;

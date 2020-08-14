@@ -17,7 +17,6 @@ void SLC::action(shared_ptr<Player> player){
 		if(val >= 1 && val < 126){
 			cout << "You moved back 3 spaces from  landing on SLC." << endl;
 			player->move(-3);	
-
 		}
 		else if(val >= 126 && val < 292){
 			cout << "You moved back 2 spaces from  landing on SLC." << endl;

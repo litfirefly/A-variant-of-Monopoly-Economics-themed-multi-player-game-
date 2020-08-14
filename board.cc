@@ -398,7 +398,7 @@ void Board::trade(vector<string> command, int currPlayer){
 	      catch(exception &err){
 	      }
 
-	      if (value>-1 && value>-1){
+	      if (value>-1 && value2>-1){
 			cout << "You can't trade money for money" << endl;
 			return;
 	      }
@@ -584,8 +584,7 @@ void Board::play(){
 	
 	while(!ended){
 		shared_ptr<Player> player = playerList[currPlayer];
-		int numPlayer = playerList.size();
-		if (numPlayer<2){
+		if (numOfPlayers<2){
 			cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 			cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 			cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
@@ -661,14 +660,17 @@ void Board::play(){
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					ended=true;
+					break;
 				}
 			}
 			if(roll[0] != roll[1] || player->isBankrupt() || player->isInJail()){
 				doubles=0;		
 				cout << numOfPlayers << endl;	
 				currPlayer = (currPlayer+1)%numOfPlayers;
-				cout << "It is now the next player's turn" << endl;
+				cout << "It is now the next player's turn." << endl;
+				td->print();
 				displayOption(playerList[currPlayer]);
+				
 			}
 			else{
 				doubles++;
@@ -679,6 +681,7 @@ void Board::play(){
 					playerList[currPlayer]->setJailTurns(0);
 					currPlayer = (currPlayer+1)%numOfPlayers;
 					cout << "It is now the next player's turn" << endl;
+					td->print();
 					displayOption(playerList[currPlayer]);
 				}
 				else{
@@ -705,6 +708,7 @@ void Board::play(){
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					ended=true;
+					break;
 				}
 			}			
 			if(playerList[currPlayer]->getPosition()!=jailSpace){
@@ -720,6 +724,7 @@ void Board::play(){
 						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 						ended=true;
+						break;
 					}
 				}
 				
@@ -735,12 +740,10 @@ void Board::play(){
 				currPlayer=0;
 			}
 			cout << "It is now the next player's turn" << endl;
+			td->print();
 			displayOption(playerList[currPlayer]);
 		}	
-		else if(command[0] == "improve"){
-			if (command.size()<3){
-				continue;
-			}
+		else if(command[0] == "improve" && command.size()>3){
 			string property = command[1];
 			for(int i = 0; i < numOfSquares; i++){
 				shared_ptr<Square> academicProperty = squares[i];
@@ -758,10 +761,7 @@ void Board::play(){
 				}
 			}
 		}
-		else if(command[0] == "mortgage"){
-			if (command.size()<2){
-				continue;
-			}
+		else if(command[0] == "mortgage" && command.size()>2){
 			string property = command[1];
                 	for(int i = 0; i < numOfSquares; i++){     
 					shared_ptr<Square> square = squares[i];  
@@ -775,10 +775,7 @@ void Board::play(){
 				       }
 			}	
 		}
-		else if(command[0] == "unmortgage"){
-			if (command.size()<2){
-				continue;
-			}
+		else if(command[0] == "unmortgage" && command.size()>=2){
                         string property = command[1];
 			
                         for(int i = 0; i < numOfSquares; i++){
@@ -804,16 +801,10 @@ void Board::play(){
 			}
                         
                 }
-		else if (command[0] == "trade"){
-			if (command.size()<4){
-				continue;
-			}
+		else if (command[0] == "trade" && command.size()>=4){
 			trade(command, currPlayer);
 		}
-		else if (command[0]=="save"){
-			if (command.size()<2){
-				continue;
-			}
+		else if (command[0]=="save" && command.size()>=2){
 			saveGame(command[1], currPlayer);
 		}
 		else{

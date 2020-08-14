@@ -196,6 +196,7 @@ void Residences::mortgage(shared_ptr<Player> player){
                 cout << "This property is already mortgaged." << endl;
                 return;
         }
+	cout << "The money you get from mortgaging is " << getCost()/2 << "." << endl;
         player->addMoney(getCost() / 2);
         setImprovementLevel(-1);
        	cout << "You have mortgaged " << getName() << "." << endl;
@@ -212,6 +213,7 @@ void Residences::unmortgage(shared_ptr<Player> player){
                 return;
         }
         int subMoney = (res_price / 2) + (res_price * 0.1);
+	cout << "The money you owe from unmortgaging is " << subMoney << "." << endl;
         if (player->getMoney()<subMoney){
                 cout << "You don't have enough money to unmortgage." << endl;
                 return;
