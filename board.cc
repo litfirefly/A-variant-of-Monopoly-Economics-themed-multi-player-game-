@@ -240,7 +240,7 @@ void Board::loadGame(string load){
                 playerList.push_back(player);
 		rollUpCards+=cups;
 	}
-
+	numOfPlayers=playerList.size();
 	initSquares();
 	int numOwnable = ownableIndex.size();
 	for (int i=0; i<numOwnable; i++){
