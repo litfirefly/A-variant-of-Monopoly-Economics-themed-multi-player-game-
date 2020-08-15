@@ -2,7 +2,7 @@
 using namespace std;
 
 
-DCTimsLine::DCTimsLine(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
+DCTimsLine::DCTimsLine(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void DCTimsLine::action(shared_ptr<Player> player){
 	cout << "You are in jail." << endl;

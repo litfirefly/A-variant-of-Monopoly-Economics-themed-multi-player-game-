@@ -7,7 +7,7 @@
 
 class GoToTims : public Square {  
 public:    
-	GoToTims(std::shared_ptr<Board> board,std::string name, int position);  
+	GoToTims(Board * board,std::string name, int position);  
 	virtual void action(std::shared_ptr<Player> player) override;
 };
 

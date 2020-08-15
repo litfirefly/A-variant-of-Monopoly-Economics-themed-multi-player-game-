@@ -11,7 +11,7 @@
 class DCTimsLine : public Square {
 	const int jailFee = 50;
 public:
-        DCTimsLine(std::shared_ptr<Board> board,std::string name, int position);
+        DCTimsLine(Board * board,std::string name, int position);
         virtual void action(std::shared_ptr<Player> player) override;
 	void rollDice(std::shared_ptr<Player> player);
 	void payJailFee(std::shared_ptr<Player> player);

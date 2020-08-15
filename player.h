@@ -56,7 +56,7 @@ public:
 	void move(int position);
 	void addMoney(int amount);
 	void subtractMoney(int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
-	void addSquare(std::shared_ptr<Square>);
+	void addSquare(std::shared_ptr<Square> square);
 	void transferMoney(std::shared_ptr<Player> to, int amount, std::vector<std::shared_ptr<Player>> otherPlayers);
 	void transferProperty(std::shared_ptr<Player> to,std::shared_ptr<Square> square, std::vector<std::shared_ptr<Player>> players);	
 };

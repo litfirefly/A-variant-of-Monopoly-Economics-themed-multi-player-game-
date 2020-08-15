@@ -16,12 +16,12 @@ class TextDisplay: public Observer {
 	    const char I = 73;
 	    const char V = 86;
 	    const char M = 77;
-	    std::shared_ptr<Board> game;
+	    Board * game;
 	    std::vector<std::shared_ptr<Player>> players;
 	    std::vector<std::vector<char>> board;
     	    void updateSquare(std::shared_ptr<Square>, int row, int col);
  public:
-    TextDisplay(std::shared_ptr<Board> game);
+    TextDisplay(Board * game);
     virtual void notify(std::shared_ptr<Subject>  whoNotified ) override;
     virtual void notify() override;
     void print();

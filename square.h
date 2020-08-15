@@ -8,7 +8,7 @@
 class Player;
 class Board;
 class Square: public Subject{
-	std::shared_ptr<Board> board;	
+	Board * board;	
 	std::string name;
 	std::string monopolyBlock;	
 	int position;
@@ -18,10 +18,10 @@ class Square: public Subject{
 	bool ownable;
 	bool improvable;
  public:
-  Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, 
+  Square(Board * board, std::string name, std::string monopolyBlock, int position, int cost, 
 		  std::shared_ptr<Player> owner, int improvement_level, bool ownable, bool improvable);
 
-  std::shared_ptr<Board> getBoard();
+  Board* getBoard();
   virtual std::string getName() override;
   std::string getMonopolyBlock();
   int getPosition();
@@ -35,11 +35,11 @@ class Square: public Subject{
   bool isMortgaged();  
   virtual int getValue();
   virtual bool isGym();
+  virtual void action(std::shared_ptr<Player> player);
   virtual void mortgage(std::shared_ptr<Player> player);
   virtual void unmortgage(std::shared_ptr<Player> player);
   virtual void improveBuy(std::shared_ptr<Player> player);
   virtual void improveSell(std::shared_ptr<Player> player);
-  virtual void action(std::shared_ptr<Player> player);
   virtual void auction();
   virtual ~Square()=0;
 

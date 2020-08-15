@@ -142,7 +142,7 @@ void Player::addMoney(int amount){
 	}
 	else{
 		money+=amount;
-		cout <<  name << " now has a balance of  " << money << " after completeing the transaction." << endl;
+		cout <<  name << " now has a balance of " << money << " after completeing the transaction." << endl;
 	}
 	return;
 }
@@ -153,7 +153,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                 return;
         } else if (money >= amount) {
                 money -= amount;
-		cout <<  name << " now has a balance of  " << money << " after completing the transaction." << endl;
+		cout <<  name << " now has a balance of " << money << " after completing the transaction." << endl;
         } else {
                 cout << "Your do not have enough money for this transaction. These are your assets: " << endl;
                 printPlayerAssets();
@@ -181,7 +181,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
 
                         if (command[0] == "bankrupt") {
                                 cout << "You have chosen to declare bankruptcy. You will now be removed from the game." << endl;
-								bankrupt = true;
+				bankrupt = true;
                                 return;
                         } else if (command[0] == "mortgage" && command.size()>1) {
                                         int size = squaresOwned.size();
@@ -195,7 +195,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         break;
                                                 }
                                         }
-                        } else if (command[0] == "improve" && command.size()>2 && command[2]=="sell") {
+                        } else if (command[0] == "improve" && command.size()>=3 && command[2]=="sell") {
                                         int size = squaresOwned.size();
                                         for (int i = 0; i < size; i++) {
                                                 if (squaresOwned[i] -> getName() == command[1]) {
@@ -207,7 +207,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         break;
                                                 }
                                         }
-                        } else if (command[0] == "trade" && command.size()>3) {
+                        } else if (command[0] == "trade" && command.size()>=4) {
                             	int index=-1;
 				int size = otherPlayers.size();
 				for (int i=0; i<size; i++){
@@ -362,7 +362,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                         cout << "Enter a valid command: " << endl;        
                 }
                 money -= amount;
-		cout <<  name << " now has a balance of  " << money << " after raising enough money and completing the transaction." << endl;
+		cout << name << " now has a balance of " << money << " after raising enough money and completing the transaction." << endl;
         }
 }
 
@@ -397,7 +397,7 @@ void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square
 		return;
 	}
 
-	if (square->isMortgaged() || square->getImprovementLevel()==-1){
+	if (square->isMortgaged()){
 		cout << square->getName() << " was mortgaged, so the receipient paid 10 percent upfront." << endl;
 		to->subtractMoney(square->getCost()*0.1, players);
 	}
@@ -414,6 +414,7 @@ void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square
 	}	
 	squaresOwned.erase(squaresOwned.begin()+found);
 	to->addSquare(square);
+	square->setOwner(to);
 	cout << square->getName() << " transferred from " << name << " to " << to->getName() << "." << endl;
 }
 

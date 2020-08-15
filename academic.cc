@@ -2,7 +2,7 @@
 using namespace std;
 
 
-AcademicProperty::AcademicProperty(std::shared_ptr<Board> board,std::string name, std::string monopolyBlock, int position, int cost, int improvementCost, vector<int> tuition): 
+AcademicProperty::AcademicProperty(Board * board,std::string name, std::string monopolyBlock, int position, int cost, int improvementCost, vector<int> tuition): 
 			Square{board, name, monopolyBlock, position, cost, nullptr, 0, true, true}, 
 			improvementCost{improvementCost}, tuition{tuition}{	
 }
@@ -16,7 +16,7 @@ void AcademicProperty::action(shared_ptr<Player> player){
 			auction();
 		}
 		else if (getOwner()==nullptr){
-			cout << "No one owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property." << endl;
+			cout << "No one owns this property yet, you can choose to buy it. Enter \"buy\" to buy the property, or anything else to auction it." << endl;
 			string line = "";
 			cin >> line;
 			if (line=="buy"){
@@ -42,10 +42,10 @@ void AcademicProperty::buy(shared_ptr<Player> player, int price){
                         player->subtractMoney(price, getBoard()->getPlayers());
                         setOwner(player);
                         player->addSquare(getBoard()->getSquares()[getPosition()]);
-			cout << "You bought this property for " << price << endl;
+			cout << player->getName() << " bought this property for " << price << endl;
                 }
                 else{
-                        cout << "You do not have enough funds to purchase " << getName() << "." << endl;
+                        cout << player->getName() << " does not have enough funds to purchase " << getName() << "." << endl;
                 }
         }
         else{
@@ -68,6 +68,9 @@ void AcademicProperty::auction(){
         cout << "The starting bid is: $ " << currBid << "." << endl;
         int index=0;
         while (auctioneers != 0){
+		if (auctioneers==1 && !noBids){
+			break;
+		}
                 string option;
 		if (players[index]->isBankrupt()){
 			auctioneers--;
@@ -78,63 +81,61 @@ void AcademicProperty::auction(){
 			}
 			continue;
 		}
-		if (auctioneers==1 && !noBids){
-			break;
-		}
                 cout << "The current bid is: $ " << currBid << "." << endl;
-                cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
-                cin >> option;
-		if(option == "withdraw"){
-                        withdraw[index] = true;
-                        auctioneers--;
-                }
-                else if(option == "bid"){
-                        while( true ){
-				string newBid;        
-                        	cout << "Enter bid value: " << endl;
-                        	cin >> newBid;
-                        	if(newBid == "withdraw"){
-                                	withdraw[index] = true;
-                                	auctioneers--;
-                                	break;
-                        	}
-				try{
-					int newBidInt = stoi(newBid);
-					if (newBidInt>players[index]->getMoney()){
-						cout << "You cant afford this bid, withdraw, or enter a lower bid" << endl;
-						continue;
-					}
-					if (newBidInt>currBid){
-						noBids=false;
-						currBid=newBidInt;
-						break;
-					}
-					else{
-                                        	cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
-						continue;
-					}
+		while (true){
+                	cout << players[index]->getName() << ": Enter 'withdraw' to withdraw from the bid or 'bid' to bid a higher value. " << endl;
+                	cin >> option;
+			if(option == "withdraw"){
+                        	withdraw[index] = true;
+                        	auctioneers--;
+				break;
+                	}
+                	else if(option == "bid"){
+					string newBid;        
+                        		cout << "Enter bid value: " << endl;
+                        		cin >> newBid;
+                        		if(newBid == "withdraw"){
+                                		withdraw[index] = true;
+                                		auctioneers--;
+                                		break;
+                        		}
+					try{
+						int newBidInt = stoi(newBid);
+						if (newBidInt>players[index]->getMoney()){
+							cout << "You cant afford this bid, withdraw, or enter a lower bid" << endl;
+							continue;
+						}
+						if (newBidInt>currBid){
+							noBids=false;
+							currBid=newBidInt;
+							break;
+						}
+						else{
+                                        		cout << "This bid is not higher than the previous bid. Enter a value higher than the preivous bid or 'withdraw': " << endl;
+							continue;
+						}
 
-				}
-				catch(invalid_argument &ia){	
-                                        cout << "Enter a valid bid  or 'withdraw': " << endl;
-					continue;
-				}
-                   	}
-		}
-		else{
-			cout << "Enter either 'bid' or 'withdraw'" << endl;
-		}
-		if (auctioneers==1){
-			continue;
+					}	
+					catch(invalid_argument &ia){	
+        	                                cout << "Enter a valid bid  or 'withdraw': " << endl;
+						continue;
+					}	
+			}
+			else{
+				cout << "Enter either 'bid' or 'withdraw'" << endl;
+			}
 		}
 		index = (index+1)%numPlayers;
+		if (auctioneers==1 || auctioneers==0){
+			continue;
+		}
 		while (withdraw[index]){
 			index=(index+1)%numPlayers;
 		}
 
         }
 	if (noBids){
-		cout << "There were no bids for the auction so it ended";
+		cout << "There were no bids for the auction so it ended. Property will remain belonged to the bank.";
 		return;
 	}
         int winner = 0;

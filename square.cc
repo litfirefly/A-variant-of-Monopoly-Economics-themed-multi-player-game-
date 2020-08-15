@@ -1,11 +1,11 @@
 #include "square.h"
  
-Square::Square(std::shared_ptr<Board> board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, 
+Square::Square(Board * board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, 
 		int improvement_level, bool ownable, bool improvable):
 	board{board}, name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{nullptr}, 
 	improvement_level{0},ownable{ownable}, improvable{improvable}{}
 
-std::shared_ptr<Board> Square::getBoard(){
+Board* Square::getBoard(){
 	return board;
 }
 

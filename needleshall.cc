@@ -1,7 +1,7 @@
 #include "needleshall.h"
 using namespace std;
 
-NeedlesHall::NeedlesHall(std::shared_ptr<Board> board, string name, int position) : Square{board,name, "", position, 0, nullptr, 0, false, false} {}
+NeedlesHall::NeedlesHall(Board * board, string name, int position) : Square{board,name, "", position, 0, nullptr, 0, false, false} {}
 
 void NeedlesHall::action(shared_ptr<Player> player){
         srand (time(NULL));

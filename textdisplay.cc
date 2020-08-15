@@ -1,7 +1,7 @@
 #include "textdisplay.h"
 using namespace std;
 
-TextDisplay::TextDisplay(shared_ptr<Board> game): game{game} {
+TextDisplay::TextDisplay(Board * game): game{game} {
 	ifstream board_text("board.txt");
 	string line;
 	while (getline(board_text, line)){
@@ -107,7 +107,7 @@ void TextDisplay::updateSquare(shared_ptr<Square> square, int rown, int coln){
 				count++;
 			}
 		}
-		for (int i=count; i<9;i++){
+		for (int i=count; i<8;i++){
 			board[row+4][col+1+count]=SPACE;
 		}
 }

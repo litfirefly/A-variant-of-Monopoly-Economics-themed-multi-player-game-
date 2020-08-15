@@ -2,7 +2,7 @@
 using namespace std;
 
 
-Osap::Osap(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
+Osap::Osap(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 void Osap::action(shared_ptr<Player> player){
 	collectMoney(player);
 }

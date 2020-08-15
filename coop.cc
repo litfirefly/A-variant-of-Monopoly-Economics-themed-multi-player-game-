@@ -2,7 +2,7 @@
 using namespace std;  
 
 
-Coop::Coop(std::shared_ptr<Board> board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
+Coop::Coop(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void Coop::action(shared_ptr<Player> player){
 	cout << "You are being charded with coop fees." << endl;

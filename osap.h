@@ -7,7 +7,7 @@ class Osap : public Square {
   const static int money = 200;
 
   public:
- 	Osap(std::shared_ptr<Board> board,std::string name, int position);
+ 	Osap(Board * board,std::string name, int position);
 	virtual void action(std::shared_ptr<Player> player) override;
 	void collectMoney(std::shared_ptr<Player> player);
 };

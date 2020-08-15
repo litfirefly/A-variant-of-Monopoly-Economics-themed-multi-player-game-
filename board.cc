@@ -38,46 +38,46 @@ void Board::setTesting(){
 }
 
 void Board::initSquares(){
-	squares.push_back(make_shared<Osap>(shared_from_this(), "Osap", 0));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "AL", "Arts1", 1, 40, 50, AL));
-	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC1", 2));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ML", "Arts1", 3, 60, 50, ML));
-	squares.push_back(make_shared<Tuition>(shared_from_this(), "Tuition", 4));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "MKV", 5));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ECH", "Arts2", 6 , 100,  50, ECH));
-	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall1", 7));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PAS", "Arts2", 8, 100, 50, PAS));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "HH", "Arts2", 9, 120, 50, HH));
-	squares.push_back(make_shared<DCTimsLine>(shared_from_this(), "DC Tims Line", 10));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "RCH", "Eng", 11, 140, 100, RCH));
-	squares.push_back(make_shared<Gym>(shared_from_this(), "PAC", 12));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DWE", "Eng", 13, 140, 100, DWE));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "CPH", "Eng", 14, 160, 100, CPH));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "UWP", 15));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "LHI", "Health", 16, 180, 100, LHI));
-	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC2", 17));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "BMH", "Health", 18, 180, 100, BMH));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "OPT", "Health", 19, 200, 100, OPT));
-	squares.push_back(make_shared<GooseNesting>(shared_from_this(), "Goose Nesting", 20));		
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV1", "Env", 21, 220, 150, EV1));
-	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall2", 22));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV2", "Env", 23, 220, 150, EV2));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EV3", "Env", 24, 240, 150, EV3));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "V1", 25));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "PHYS", "Sci1", 26, 260, 150, PHYS));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B1", "Sci1", 27, 260, 150, B1));
-	squares.push_back(make_shared<Gym>(shared_from_this(), "CIF", 28));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "B2", "Sci1", 29, 280, 150, B2));
-	squares.push_back(make_shared<GoToTims>(shared_from_this(), "Go To Tims", 30));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "EIT", "Sci2", 31, 300, 200, EIT));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "ESC", "Sci2", 32, 300, 200, ESC));
-	squares.push_back(make_shared<SLC>(shared_from_this(), "SLC3", 33));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "C2", "Sci2", 34, 320, 200, C2));
-	squares.push_back(make_shared<Residences>(shared_from_this(), "REV", 35));
-	squares.push_back(make_shared<NeedlesHall>(shared_from_this(), "Needles Hall3", 36));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "MC", "Math", 37, 350, 200, MC));
-	squares.push_back(make_shared<Coop>(shared_from_this(), "Co-op Fee", 38));
-	squares.push_back(make_shared<AcademicProperty>(shared_from_this(), "DC", "Math", 39, 400, 200, DC));
+	squares.push_back(make_shared<Osap>(this, "Osap", 0));
+	squares.push_back(make_shared<AcademicProperty>(this, "AL", "Arts1", 1, 40, 50, AL));
+	squares.push_back(make_shared<SLC>(this, "SLC1", 2));
+	squares.push_back(make_shared<AcademicProperty>(this, "ML", "Arts1", 3, 60, 50, ML));
+	squares.push_back(make_shared<Tuition>(this, "Tuition", 4));
+	squares.push_back(make_shared<Residences>(this, "MKV", 5));
+	squares.push_back(make_shared<AcademicProperty>(this, "ECH", "Arts2", 6 , 100,  50, ECH));
+	squares.push_back(make_shared<NeedlesHall>(this, "Needles Hall1", 7));
+	squares.push_back(make_shared<AcademicProperty>(this, "PAS", "Arts2", 8, 100, 50, PAS));
+	squares.push_back(make_shared<AcademicProperty>(this, "HH", "Arts2", 9, 120, 50, HH));
+	squares.push_back(make_shared<DCTimsLine>(this, "DC Tims Line", 10));
+	squares.push_back(make_shared<AcademicProperty>(this, "RCH", "Eng", 11, 140, 100, RCH));
+	squares.push_back(make_shared<Gym>(this, "PAC", 12));
+	squares.push_back(make_shared<AcademicProperty>(this, "DWE", "Eng", 13, 140, 100, DWE));
+	squares.push_back(make_shared<AcademicProperty>(this, "CPH", "Eng", 14, 160, 100, CPH));
+	squares.push_back(make_shared<Residences>(this, "UWP", 15));
+	squares.push_back(make_shared<AcademicProperty>(this, "LHI", "Health", 16, 180, 100, LHI));
+	squares.push_back(make_shared<SLC>(this, "SLC2", 17));
+	squares.push_back(make_shared<AcademicProperty>(this, "BMH", "Health", 18, 180, 100, BMH));
+	squares.push_back(make_shared<AcademicProperty>(this, "OPT", "Health", 19, 200, 100, OPT));
+	squares.push_back(make_shared<GooseNesting>(this, "Goose Nesting", 20));		
+	squares.push_back(make_shared<AcademicProperty>(this, "EV1", "Env", 21, 220, 150, EV1));
+	squares.push_back(make_shared<NeedlesHall>(this, "Needles Hall2", 22));
+	squares.push_back(make_shared<AcademicProperty>(this, "EV2", "Env", 23, 220, 150, EV2));
+	squares.push_back(make_shared<AcademicProperty>(this, "EV3", "Env", 24, 240, 150, EV3));
+	squares.push_back(make_shared<Residences>(this, "V1", 25));
+	squares.push_back(make_shared<AcademicProperty>(this, "PHYS", "Sci1", 26, 260, 150, PHYS));
+	squares.push_back(make_shared<AcademicProperty>(this, "B1", "Sci1", 27, 260, 150, B1));
+	squares.push_back(make_shared<Gym>(this, "CIF", 28));
+	squares.push_back(make_shared<AcademicProperty>(this, "B2", "Sci1", 29, 280, 150, B2));
+	squares.push_back(make_shared<GoToTims>(this, "Go To Tims", 30));
+	squares.push_back(make_shared<AcademicProperty>(this, "EIT", "Sci2", 31, 300, 200, EIT));
+	squares.push_back(make_shared<AcademicProperty>(this, "ESC", "Sci2", 32, 300, 200, ESC));
+	squares.push_back(make_shared<SLC>(this, "SLC3", 33));
+	squares.push_back(make_shared<AcademicProperty>(this, "C2", "Sci2", 34, 320, 200, C2));
+	squares.push_back(make_shared<Residences>(this, "REV", 35));
+	squares.push_back(make_shared<NeedlesHall>(this, "Needles Hall3", 36));
+	squares.push_back(make_shared<AcademicProperty>(this, "MC", "Math", 37, 350, 200, MC));
+	squares.push_back(make_shared<Coop>(this, "Co-op Fee", 38));
+	squares.push_back(make_shared<AcademicProperty>(this, "DC", "Math", 39, 400, 200, DC));
 	for (int i=0; i<numOfSquares; i++){
 		squares[i]->attach(td);
 		squares[i]->notifyObservers();
@@ -86,7 +86,7 @@ void Board::initSquares(){
 
 void Board::initialize(int numPlayers){
 	vector<bool> piecesChosen;
-	td = make_shared<TextDisplay>(shared_from_this());
+	td = make_shared<TextDisplay>(this);
 	for(int i = 0; i < maxNumOfPlayers; i++){
 		piecesChosen.push_back(false);
 	}
@@ -126,15 +126,24 @@ void Board::initialize(int numPlayers){
  	                cin >> playerPiece;
         	        int counter = 0;
 			int numOfPieces = pieces.size();
+			bool taken=false;
 	                for(int y = 0; y < numOfPieces; y++){
         	                if(playerPiece[0] != pieces[y][0]){
                 	                counter++;
                         	}
+				else if (playerPiece[0]==pieces[y][0] && piecesChosen[y]==true){
+					cout << "Someone already chose that piece." << endl;
+					taken=true;
+				}
      	                   	else if(playerPiece[0] == pieces[y][0]){
-        	                        piecesChosen[y] = true;
+					piecesChosen[y] = true;
                 	                counter = 0;
+					break;
                 	        }
-               		}  
+               		} 
+		        if (taken){
+				continue;
+			}	
 			if(counter == maxNumOfPlayers){  
   				cout << "This piece does not exist. Please select one of the available pieces." << endl;
                 		continue;
@@ -159,7 +168,7 @@ void Board::initialize(int numPlayers){
 
 void Board::loadGame(string load){
 
-	td = make_shared<TextDisplay>(shared_from_this());
+	td = make_shared<TextDisplay>(this);
 	ifstream inp(load);
 	string line = "";
 	getline(inp, line);
@@ -403,6 +412,7 @@ void Board::trade(vector<string> command, int currPlayer){
 			return;
 	      }
 	      if (value>-1){
+		     //Trade Square for Money
 		     vector<shared_ptr<Square>> mySquares = current->getSquares();
 		     int numPropOwned = mySquares.size();
 	             int square_index=-1;
@@ -447,7 +457,7 @@ void Board::trade(vector<string> command, int currPlayer){
 		    return;
 	      }
 	      else if (value2>-1){
-                     
+                     //Trade Money for Square
 		     vector<shared_ptr<Square>> otherSquares = other->getSquares();
 		     int numPropOwned = otherSquares.size();
 	             int square_index=-1;
@@ -487,12 +497,13 @@ void Board::trade(vector<string> command, int currPlayer){
                         return;
                      }
                     other->transferProperty(current, otherSquares[square_index], playerList);
-                    current->subtractMoney(value, playerList);
-                    other->addMoney(value);
+                    current->subtractMoney(value2, playerList);
+                    other->addMoney(value2);
 
                     return;
               }
 	      else{
+		        //Trade Square for Square
 		      	vector<shared_ptr<Square>> mySquares = current->getSquares();
         	      	int numPropOwned = mySquares.size();
           	      	int square_index=-1;
@@ -598,8 +609,7 @@ void Board::play(){
 			continue;
 		}
 		if (command[0]=="quit"){
-			ended=true;
-			break;
+			return;
 		}
 		else if(command[0] == "roll"){
 			if (player->isInJail()){
@@ -661,9 +671,12 @@ void Board::play(){
 			}
 			if(roll[0] != roll[1] || player->isBankrupt() || player->isInJail()){
 				doubles=0;		
-				cout << numOfPlayers << endl;	
 				currPlayer = (currPlayer+1)%numOfPlayers;
-				cout << "It is now the next player's turn." << endl;
+				cout << "It is now the next player's turn. Hit enter to continue." << endl;
+				
+					
+				cin.ignore(1000, '\n');
+				
 				td->print();
 				displayOption(playerList[currPlayer]);
 				
@@ -672,11 +685,16 @@ void Board::play(){
 				doubles++;
 				if(doubles==3){
 					cout << "You rolled three doubles, you are sent to jail." << endl;
-					playerList[currPlayer]->setPosition(jailSpace);
-					playerList[currPlayer]->setJail(true);
-					playerList[currPlayer]->setJailTurns(0);
+					int oldpos = player->getPosition();
+					player->setPosition(jailSpace);
+					player->setJail(true);
+					player->setJailTurns(0);
+					squares[oldpos]->notifyObservers();
+					squares[jailSpace]->notifyObservers();
+
 					currPlayer = (currPlayer+1)%numOfPlayers;
-					cout << "It is now the next player's turn" << endl;
+					cout << "It is now the next player's turn. Hit enter to continue." << endl;
+					cin.ignore(1000, '\n');
 					td->print();
 					displayOption(playerList[currPlayer]);
 				}
@@ -735,11 +753,12 @@ void Board::play(){
 				doubles=0;
 				currPlayer=0;
 			}
-			cout << "It is now the next player's turn" << endl;
+			cout << "It is now the next player's turn. Hit enter to continue." << endl;
+			cin.ignore(1000, '\n');
 			td->print();
 			displayOption(playerList[currPlayer]);
 		}	
-		else if(command[0] == "improve" && command.size()>3){
+		else if(command[0] == "improve" && command.size()>=3){
 			string property = command[1];
 			for(int i = 0; i < numOfSquares; i++){
 				shared_ptr<Square> academicProperty = squares[i];
@@ -757,7 +776,7 @@ void Board::play(){
 				}
 			}
 		}
-		else if(command[0] == "mortgage" && command.size()>2){
+		else if(command[0] == "mortgage" && command.size()>=2){
 			string property = command[1];
                 	for(int i = 0; i < numOfSquares; i++){     
 					shared_ptr<Square> square = squares[i];  

@@ -7,7 +7,7 @@
 
 class GooseNesting : public Square {
  public:
-        GooseNesting(std::shared_ptr<Board> board,std::string name, int position);
+        GooseNesting(Board * board,std::string name, int position);
         virtual void action(std::shared_ptr<Player> player) override;
 };
 
