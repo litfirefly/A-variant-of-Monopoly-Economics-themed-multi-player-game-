@@ -7,9 +7,11 @@ DCTimsLine::DCTimsLine(Board * board,string name, int position) : Square{board, 
 void DCTimsLine::action(Player* player){
 	cout << "You are in jail." << endl;
 	bool pay=true;
+	bool last=false;
 	while(true){
 		if (player->getJailTurns()==2){
 			cout << "Enter 'pay' or 'up' to leave, this is your last term." << endl;
+			last=true;
 		}
 		else{
 			cout << "Enter 'roll' to roll the die, 'pay' to pay the jail fee, or 'up' to use your Roll Up card" << endl;
@@ -29,7 +31,7 @@ void DCTimsLine::action(Player* player){
 			
 			if(pay&& (!(player->getJailTurns()==2)) && player->getMoney()<jailFee){
 				cout << "Warning: You don't have the money to pay" << endl;
-				cout << "Type in pay againg to continue, or choose something else." << endl;
+				cout << "Type in pay again to continue, or choose something else." << endl;
 				pay=false;
 				continue;
 			}
@@ -48,6 +50,9 @@ void DCTimsLine::action(Player* player){
 		else{
 			cout << "Invalid option. Please choose one of the options given." << endl;
 		}		
+	}
+	if(last){
+		rollDice(player);
 	}
 }
 
@@ -96,7 +101,7 @@ void DCTimsLine::rollDice(Player* player){
 			player->setJailTurns(player->getJailTurns()+1);
 		}	
 	}
-	if(release){
+	if(release && !player->isBankrupt()){
 			
 			player->setJail(false);
 			player->setJailTurns(-1);

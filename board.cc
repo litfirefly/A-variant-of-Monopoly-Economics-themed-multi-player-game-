@@ -666,8 +666,13 @@ void Board::play(){
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					ended=true;
-					break;
+					return;
 				}
+				 cout << "It is now the next player's turn. Hit enter to continue." << endl;
+                                 cin.ignore(1000, '\n');
+                                 td->print();
+                                 displayOption(playerList[currPlayer]);
+				 continue;
 			}
 			if(roll[0] != roll[1] || player->isBankrupt() || player->isInJail()){
 				doubles=0;		
@@ -712,23 +717,31 @@ void Board::play(){
 			cout << "You are in jail" << endl;
 			squares[player->getPosition()]->action(playerList[currPlayer].get());
 			
+			bool bankrupt=false;
 			if (player->isBankrupt()){
 				cout << "You have been bankrupted, your piece will now be removed." << endl;
 				numOfPlayers--;
+				bankrupt=true;
 				playerList.erase(playerList.begin()+currPlayer);
 				if (numOfPlayers==1){
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 					cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-					ended=true;
-					break;
-				}
+					return;
+				} 
+				cout << "It is now the next player's turn. Hit enter to continue." << endl;
+                                cin.ignore(1000, '\n');
+                                td->print();
+                                displayOption(playerList[currPlayer]);
+
+				continue;
 			}			
-			if(playerList[currPlayer]->getPosition()!=jailSpace){
+			if(!bankrupt && playerList[currPlayer]->getPosition()!=jailSpace){
 				squares[player->getPosition()]->action(player);
 				squares[jailSpace]->notifyObservers();
 				squares[player->getPosition()]->notifyObservers();
 				if (player->isBankrupt()){
+					bankrupt=true;
 					cout << "You have been bankrupted, your piece will now be removed." << endl;
 					numOfPlayers--;
 					playerList.erase(playerList.begin()+currPlayer);
@@ -736,12 +749,16 @@ void Board::play(){
 						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 						cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
-						ended=true;
-						break;
+						return;
 					}
+					cout << "It is now the next player's turn. Hit enter to continue." << endl;
+                      	        	cin.ignore(1000, '\n');
+                        	        td->print();
+                                 	displayOption(playerList[currPlayer]);
+                                 	continue;
 				}
 				
-				if (player->getJailLastRoll()[0]==player->getJailLastRoll()[1]){
+				if (!bankrupt && player->getJailLastRoll()[0]==player->getJailLastRoll()[1]){
 					doubles=1;
 					continue;
 				}			
