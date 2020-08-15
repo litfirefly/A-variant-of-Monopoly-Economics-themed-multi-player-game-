@@ -58,10 +58,10 @@ void DCTimsLine::action(Player* player){
 
 void DCTimsLine::rollDice(Player* player){
 	bool release=false;
-	if(player->getJailTurns() == 2){
+	if(player->getJailTurns() == 2 || player->getJailTurns()==-1){
 		release=true;
 	}
-	if (!release){
+	else if (!release){
 		vector<int> dice;
 		int die1=-1;
 		int die2=-1;
@@ -106,12 +106,19 @@ void DCTimsLine::rollDice(Player* player){
 			player->setJail(false);
 			player->setJailTurns(-1);
 			vector<int> releaseRoll = player->getJailLastRoll();
+			if (releaseRoll.size()<2){
+				cout << "You got out, but their is no last roll stored on record due to a loaded game." << endl;
+				cout << "Roll next turn." << endl;
+				return;
+			}
 			int dice1 = releaseRoll[0];
 			int dice2 = releaseRoll[1];
 			player->move(dice1 + dice2);
 			while(player->getPosition()>=40){
 				player->move(-40);
 			}
+			cout << "Rolled " << dice1 << " and " << dice2 << "." << endl;
+			cout << "Landed on " << getBoard()->getSquares()[player->getPosition()]->getName() << endl;
 	}
 }
 

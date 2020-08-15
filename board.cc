@@ -671,6 +671,7 @@ void Board::play(){
 				 cout << "It is now the next player's turn. Hit enter to continue." << endl;
                                  cin.ignore(1000, '\n');
                                  td->print();
+				 currPlayer = (currPlayer+1)%numOfPlayers;
                                  displayOption(playerList[currPlayer]);
 				 continue;
 			}
@@ -732,6 +733,7 @@ void Board::play(){
 				cout << "It is now the next player's turn. Hit enter to continue." << endl;
                                 cin.ignore(1000, '\n');
                                 td->print();
+				currPlayer = (currPlayer+1)%numOfPlayers;
                                 displayOption(playerList[currPlayer]);
 
 				continue;
@@ -754,6 +756,7 @@ void Board::play(){
 					cout << "It is now the next player's turn. Hit enter to continue." << endl;
                       	        	cin.ignore(1000, '\n');
                         	        td->print();
+					currPlayer = (currPlayer+1)%numOfPlayers;
                                  	displayOption(playerList[currPlayer]);
                                  	continue;
 				}
