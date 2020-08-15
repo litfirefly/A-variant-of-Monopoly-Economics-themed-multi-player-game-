@@ -11,7 +11,7 @@
 class Square;
 class Player;
 class TextDisplay;
-class Board : public std::enable_shared_from_this<Board>{
+class Board{
 	
 	const int maxNumOfPlayers = 8;
 	const int numOfSquares = 40;
