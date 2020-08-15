@@ -12,13 +12,13 @@ class Residences : public Square{
   bool gym=false;
  public:
   Residences(Board * board,std::string name, int position);
-  virtual void action(std::shared_ptr<Player> player) override;
+  virtual void action(Player* player) override;
   virtual bool isGym() override;
-  void buy(std::shared_ptr<Player> player, int price);
+  void buy(Player * player, int price);
   void auction();
-  void payRent(std::shared_ptr<Player> player);
-  void mortgage(std::shared_ptr<Player> player);
-  void unmortgage(std::shared_ptr<Player> player);
+  void payRent(Player* player);
+  void mortgage(Player* player);
+  void unmortgage(Player* player);
 };
 
 #endif

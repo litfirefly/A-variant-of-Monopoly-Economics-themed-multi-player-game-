@@ -3,7 +3,7 @@ using namespace std;
 
 SLC::SLC(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
-void SLC::action(shared_ptr<Player> player){
+void SLC::action(Player* player){
 	srand (time(NULL)); 
 	int val = rand() % 100 + 1;
 	int oldpos = player->getPosition();

@@ -190,7 +190,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         if (!(squaresOwned[i] -> isOwnable())) {
                                                                 cout << squaresOwned[i]->getName() << "cannot be mortgaged." << endl;
                                                         } else {
-                                                                squaresOwned[i] -> mortgage(shared_from_this());
+                                                                squaresOwned[i] -> mortgage(this);
                                                         }
                                                         break;
                                                 }
@@ -202,7 +202,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                         if (!(squaresOwned[i] -> isImprovable()) || squaresOwned[i] -> getImprovementLevel() < 1) {
                                                                 cout << squaresOwned[i]->getName() << "has no improvements." << endl;
                                                         } else {
-                                                                squaresOwned[i] -> improveSell(shared_from_this());
+                                                                squaresOwned[i] -> improveSell(this);
                                                         }
                                                         break;
                                                 }
@@ -220,7 +220,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
 					cout << "Player: " << command[1]  <<" doesn't exist" << endl;
 					continue;
 				}
-				shared_ptr<Player> other = otherPlayers[index];
+				Player* other = otherPlayers[index].get();
 
 				int value=-1;
 				try{
@@ -347,7 +347,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
 						continue;
 					}
 					transferProperty(other, squaresOwned[square_index], otherPlayers);
-					other->transferProperty(shared_from_this(),otherSquares[square_index_other], otherPlayers);
+					other->transferProperty(this,otherSquares[square_index_other], otherPlayers);
 			
 				}
 			}
@@ -372,7 +372,7 @@ void Player::addSquare(std::shared_ptr<Square> square){
 	squaresOwned.insert(squaresOwned.end(), square);
 }
 
-void Player::transferMoney(std::shared_ptr<Player> to, int amount, std::vector<shared_ptr<Player>> otherPlayers){
+void Player::transferMoney(Player* to, int amount, std::vector<shared_ptr<Player>> otherPlayers){
 	try{
 		subtractMoney(amount, otherPlayers);
 		to->addMoney(amount);
@@ -383,7 +383,7 @@ void Player::transferMoney(std::shared_ptr<Player> to, int amount, std::vector<s
 	}
 }
 
-void Player::transferProperty(std::shared_ptr<Player> to, std::shared_ptr<Square> square, vector<shared_ptr<Player>> players){
+void Player::transferProperty(Player* to, std::shared_ptr<Square> square, vector<shared_ptr<Player>> players){
 	int found=-1;
 	int size = squaresOwned.size();
 	for (int i=0; i<size; i++){

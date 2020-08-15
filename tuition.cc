@@ -3,7 +3,7 @@ using namespace std;
 
 Tuition::Tuition(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
-void Tuition::action(shared_ptr<Player> player){
+void Tuition::action(Player* player){
 	int tenpercent = player->getWorth() * 0.1;
 	cout << "Choose between paying $300 tuition or 10\% of your total worth (including your savings, printed prices of all buildings you own, and costs of each improvement)." << endl;
 	cout << "Enter '300' to pay the flat fee, or '10' to pay 10\% of your total worth." << endl;

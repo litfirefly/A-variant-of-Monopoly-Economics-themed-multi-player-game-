@@ -9,7 +9,7 @@ bool Residences::isGym(){
 	return gym;
 }
 
-void Residences::action(shared_ptr<Player> player){
+void Residences::action(Player * player){
 		if (getOwner()==nullptr && getCost()>player->getMoney()){
 			cout << "No one owns this property but you don't have enough money to normally buy it, so it will be auctioned." << endl;
 			auction();
@@ -35,7 +35,7 @@ void Residences::action(shared_ptr<Player> player){
                 }
 }
 
-void Residences::buy(shared_ptr<Player> player, int price){
+void Residences::buy(Player * player, int price){
 	if(!getOwner()){
 		if(player->getMoney() - price >= 0){
 			player->subtractMoney(price, getBoard()->getPlayers());
@@ -147,10 +147,10 @@ void Residences::auction(){
                 }
         }
 	cout << players[winner]->getName() << " has won the auction, and purchased " << getName() << " for " << currBid << "." << endl;
-        buy(players[winner], currBid);
+        buy(players[winner].get(), currBid);
 }
 
-void Residences::payRent(shared_ptr<Player> tenant){
+void Residences::payRent(Player * tenant){
 	if(getOwner() && !isMortgaged() && tenant->getName() != getOwner()->getName()){
 		int subMoney = 0;
 		int res = getOwner()->getResNum();
@@ -187,7 +187,7 @@ void Residences::payRent(shared_ptr<Player> tenant){
 	}
 }
 
-void Residences::mortgage(shared_ptr<Player> player){
+void Residences::mortgage(Player * player){
        if (!getOwner()|| player->getName()!=getOwner()->getName()){
                 cout << "You are not the owner" << endl;
                 return;
@@ -203,7 +203,7 @@ void Residences::mortgage(shared_ptr<Player> player){
 
 }
 
-void Residences::unmortgage(shared_ptr<Player> player){
+void Residences::unmortgage(Player * player){
         if (!getOwner()|| player->getName()!=getOwner()->getName()){
                 cout << "You are not the owner" << endl;
                 return;

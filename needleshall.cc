@@ -3,7 +3,7 @@ using namespace std;
 
 NeedlesHall::NeedlesHall(Board * board, string name, int position) : Square{board,name, "", position, 0, nullptr, 0, false, false} {}
 
-void NeedlesHall::action(shared_ptr<Player> player){
+void NeedlesHall::action(Player* player){
         srand (time(NULL));
         int val = rand() % 100 + 1;
         if(val == 100 && getBoard()->getRollUpCards() != 4){

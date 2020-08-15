@@ -13,21 +13,21 @@ class Square: public Subject{
 	std::string monopolyBlock;	
 	int position;
 	int cost;
-	std::shared_ptr<Player> owner;
+	Player * owner;
 	int improvement_level;	
 	bool ownable;
 	bool improvable;
  public:
   Square(Board * board, std::string name, std::string monopolyBlock, int position, int cost, 
-		  std::shared_ptr<Player> owner, int improvement_level, bool ownable, bool improvable);
+		  Player * owner, int improvement_level, bool ownable, bool improvable);
 
   Board* getBoard();
   virtual std::string getName() override;
   std::string getMonopolyBlock();
   int getPosition();
   int getCost();
-  std::shared_ptr<Player> getOwner();
-  void setOwner(std::shared_ptr<Player> player);
+  Player* getOwner();
+  void setOwner(Player* player);
   int getImprovementLevel();
   void setImprovementLevel(int level);
   bool isOwnable();
@@ -35,11 +35,11 @@ class Square: public Subject{
   bool isMortgaged();  
   virtual int getValue();
   virtual bool isGym();
-  virtual void action(std::shared_ptr<Player> player);
-  virtual void mortgage(std::shared_ptr<Player> player);
-  virtual void unmortgage(std::shared_ptr<Player> player);
-  virtual void improveBuy(std::shared_ptr<Player> player);
-  virtual void improveSell(std::shared_ptr<Player> player);
+  virtual void action(Player * player);
+  virtual void mortgage(Player * player);
+  virtual void unmortgage(Player * player);
+  virtual void improveBuy(Player * player);
+  virtual void improveSell(Player * player);
   virtual void auction();
   virtual ~Square()=0;
 

@@ -5,7 +5,7 @@ Gym::Gym(Board * board,std::string name, int position):
 	Square{board, name, "", position, gym_price, nullptr ,0, true, false}{
 }
 
-void Gym::action(shared_ptr<Player> player){
+void Gym::action(Player * player){
                 cout << "You have landed on " << getName() << "." << endl;
 		if (!getOwner() && getCost()>player->getMoney()){
 			cout << "No one owns this property but you don't have enough money to normally buy it, so it will be auctioned." << endl;
@@ -35,7 +35,7 @@ void Gym::action(shared_ptr<Player> player){
 bool Gym::isGym(){
 	return gym;
 }
-void Gym::buy(shared_ptr<Player> player, int price){
+void Gym::buy(Player * player, int price){
         if(!getOwner()){
                 if(player->getMoney() - price >= 0){
                         player->subtractMoney(price, getBoard()->getPlayers());
@@ -146,11 +146,11 @@ void Gym::auction(){
                 }
         }
 	cout << players[winner]->getName() << " has won the auction, and purchased " << getName() << " for " << currBid << "." << endl;
-        buy(players[winner], currBid);
+        buy(players[winner].get(), currBid);
 }
 
 
-void Gym::payFee(shared_ptr<Player> tenant){
+void Gym::payFee(Player * tenant){
 	if(getOwner() && !isMortgaged() && tenant!=getOwner()){
                 cout << getOwner()->getGymNum() << endl;
 		int subMoneyTimes = 0;
@@ -207,7 +207,7 @@ void Gym::payFee(shared_ptr<Player> tenant){
         }
 }
 
-void Gym::mortgage(shared_ptr<Player> player){
+void Gym::mortgage(Player * player){
  	if (!getOwner()|| player->getName()!=getOwner()->getName()){
                 cout << "You are not the owner." << endl;
                 return;
@@ -222,7 +222,7 @@ void Gym::mortgage(shared_ptr<Player> player){
        	cout << "You have mortgaged " << getName() << "." << endl;
 }
 
-void Gym::unmortgage(shared_ptr<Player> player){
+void Gym::unmortgage(Player * player){
         if (!getOwner()|| player->getName()!=getOwner()->getName()){
                 cout << "You are not the owner." << endl;
                 return;

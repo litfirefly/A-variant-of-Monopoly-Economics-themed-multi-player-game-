@@ -4,7 +4,7 @@ using namespace std;
 
 GoToTims::GoToTims(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
-void GoToTims::action(shared_ptr<Player> player){
+void GoToTims::action(Player * player){
 	cout << "You are going to jail." << endl;
 	int oldpos = player->getPosition();
 	player->setPosition(10);

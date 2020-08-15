@@ -1,6 +1,6 @@
 #include "square.h"
  
-Square::Square(Board * board, std::string name, std::string monopolyBlock, int position, int cost, std::shared_ptr<Player> owner, 
+Square::Square(Board * board, std::string name, std::string monopolyBlock, int position, int cost, Player* owner, 
 		int improvement_level, bool ownable, bool improvable):
 	board{board}, name{name}, monopolyBlock{monopolyBlock}, position{position}, cost{cost}, owner{nullptr}, 
 	improvement_level{0},ownable{ownable}, improvable{improvable}{}
@@ -25,11 +25,11 @@ int Square::getCost(){
 	return cost;
 }
 
-std::shared_ptr<Player> Square::getOwner(){
+Player* Square::getOwner(){
 	return owner;
 }
 
-void Square::setOwner(std::shared_ptr<Player> player){
+void Square::setOwner(Player* player){
 	owner = player;
 	notifyObservers();
 }
@@ -63,10 +63,10 @@ bool Square::isGym(){
 	return false;
 }
 
-void Square::mortgage(std::shared_ptr<Player> player){}
-void Square::unmortgage(std::shared_ptr<Player> player){}
-void Square::improveBuy(std::shared_ptr<Player> player){}
-void Square::improveSell(std::shared_ptr<Player> player){}
-void Square::action(std::shared_ptr<Player> player){}
+void Square::mortgage(Player* player){}
+void Square::unmortgage(Player* player){}
+void Square::improveBuy(Player* player){}
+void Square::improveSell(Player* player){}
+void Square::action(Player* player){}
 void Square::auction(){}
 Square::~Square(){}

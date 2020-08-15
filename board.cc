@@ -262,7 +262,7 @@ void Board::loadGame(string load){
 				for (int j=0; j<numPlayers; j++){
 					if (owner==playerList[j]->getName()){
 						found = true;
-						square->setOwner(playerList[j]);
+						square->setOwner(playerList[j].get());
 						if (!square->isImprovable() && square->isGym()){
 							playerList[j]->addGym();
 						}
@@ -391,8 +391,8 @@ void Board::trade(vector<string> command, int currPlayer){
                         cout << "Player: " << command[1]  <<" doesn't exist" << endl;
 			return;
 	      }
-	      shared_ptr<Player> current = playerList[currPlayer];
-	      shared_ptr<Player> other = playerList[index];
+	      Player* current = playerList[currPlayer].get();
+	      Player* other = playerList[index].get();
 
 	      int value=-1;
 	      try{
@@ -590,7 +590,7 @@ void Board::play(){
 	int doubles=0;
 	
 	while(!ended){
-		shared_ptr<Player> player = playerList[currPlayer];
+		Player * player = playerList[currPlayer].get();
 		if (numOfPlayers<2){
 			cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
 			cout << "The game is now over. The winner is " << playerList[0]->getName() << "." << endl;
@@ -674,7 +674,6 @@ void Board::play(){
 				currPlayer = (currPlayer+1)%numOfPlayers;
 				cout << "It is now the next player's turn. Hit enter to continue." << endl;
 				
-					
 				cin.ignore(1000, '\n');
 				
 				td->print();
@@ -711,7 +710,7 @@ void Board::play(){
 			}
 
 			cout << "You are in jail" << endl;
-			squares[player->getPosition()]->action(playerList[currPlayer]);
+			squares[player->getPosition()]->action(playerList[currPlayer].get());
 			
 			if (player->isBankrupt()){
 				cout << "You have been bankrupted, your piece will now be removed." << endl;

@@ -8,7 +8,7 @@
 class GooseNesting : public Square {
  public:
         GooseNesting(Board * board,std::string name, int position);
-        virtual void action(std::shared_ptr<Player> player) override;
+        virtual void action(Player * player) override;
 };
 
 #endif

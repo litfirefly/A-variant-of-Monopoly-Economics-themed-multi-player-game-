@@ -8,8 +8,8 @@ class Osap : public Square {
 
   public:
  	Osap(Board * board,std::string name, int position);
-	virtual void action(std::shared_ptr<Player> player) override;
-	void collectMoney(std::shared_ptr<Player> player);
+	virtual void action(Player * player) override;
+	void collectMoney(Player * player);
 };
 
 #endif

@@ -4,7 +4,7 @@ using namespace std;
 
 DCTimsLine::DCTimsLine(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
-void DCTimsLine::action(shared_ptr<Player> player){
+void DCTimsLine::action(Player* player){
 	cout << "You are in jail." << endl;
 	bool pay=true;
 	while(true){
@@ -51,7 +51,7 @@ void DCTimsLine::action(shared_ptr<Player> player){
 	}
 }
 
-void DCTimsLine::rollDice(shared_ptr<Player> player){
+void DCTimsLine::rollDice(Player* player){
 	bool release=false;
 	if(player->getJailTurns() == 2){
 		release=true;
@@ -110,7 +110,7 @@ void DCTimsLine::rollDice(shared_ptr<Player> player){
 	}
 }
 
-void DCTimsLine::payJailFee(shared_ptr<Player> player){
+void DCTimsLine::payJailFee(Player* player){
 	player->subtractMoney(jailFee, getBoard()->getPlayers());
 	if(!player->isBankrupt()){
 		player->setJail(false);
@@ -134,7 +134,7 @@ void DCTimsLine::payJailFee(shared_ptr<Player> player){
 	}
 }
 
-void DCTimsLine::useRollUp(shared_ptr<Player> player){
+void DCTimsLine::useRollUp(Player* player){
 	player->useTimCup();
 	getBoard()->setRollUpCards(getBoard()->getRollUpCards()-1);
 	player->setJail(false);
