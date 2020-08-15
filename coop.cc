@@ -5,7 +5,7 @@ using namespace std;
 Coop::Coop(Board * board,string name, int position) : Square{board, name, "", position, 0, nullptr, 0, false, false} {}
 
 void Coop::action(Player* player){
-	cout << "You are being charded with coop fees." << endl;
+	cout << "You are being charged with coop fees." << endl;
 	player->subtractMoney(payMoney, getBoard()->getPlayers());
 	if (player->isBankrupt()){
 		if(getBoard()->getPlayers().size()<3){
