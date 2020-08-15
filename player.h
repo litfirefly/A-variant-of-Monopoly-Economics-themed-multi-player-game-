@@ -10,7 +10,7 @@
 #include <stdexcept>
 class Square;
 
-class Player : public std::enable_shared_from_this<Player>{
+class Player{
 	
 	char piece;
 	std::string name;
