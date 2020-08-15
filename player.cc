@@ -181,7 +181,7 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
 
                         if (command[0] == "bankrupt") {
                                 cout << "You have chosen to declare bankruptcy. You will now be removed from the game." << endl;
-				bankrupt = true;
+								bankrupt = true;
                                 return;
                         } else if (command[0] == "mortgage" && command.size()>1) {
                                         int size = squaresOwned.size();
@@ -208,127 +208,148 @@ void Player::subtractMoney(int amount, vector < shared_ptr < Player >> otherPlay
                                                 }
                                         }
                         } else if (command[0] == "trade" && command.size()>3) {
-                                        int index = -1;
-                                        int size = otherPlayers.size();
-                                        for (int i = 0; i < size; i++) {
-                                                if (otherPlayers[i] -> getName() == command[1]) {
-                                                        index = i;
-                                                        break;
-                                                }
-                                        }
-                                        if (index == -1) {
-                                                cout << "Player: " << command[1]  <<" doesn't exist" << endl;
-                                                continue;
-                                        }
-                                        shared_ptr < Player > other = otherPlayers[index];
-                                        int value = -1;
-                                        try {
-                                                value = stoi(command[3]);
-                                        } catch (exception & err) {
-	
+                            	int index=-1;
+				int size = otherPlayers.size();
+				for (int i=0; i<size; i++){
+					if (otherPlayers[i]->getName()==command[1]){
+						index = i;
+						break;
+					}
+				}
+				if (index==-1){
+					cout << "Player: " << command[1]  <<" doesn't exist" << endl;
+					continue;
+				}
+				shared_ptr<Player> other = otherPlayers[index];
+
+				int value=-1;
+				try{
+					value = stoi(command[3]);
+				}
+				catch(exception &err){}
+				int value2=-1;
+				try{
+					value2 = stoi(command[2]);
+				}
+				catch(exception &err){}
+				if (value>-1 && value2>-1){
+					cout << "You can't trade money for money" << endl;
+					continue;
+				}
+		            	if (value>-1){
+					int numPropOwned = squaresOwned.size();
+					int square_index=-1;
+					string accept="";
+					for (int i=0; i<numPropOwned; i++){
+						if (squaresOwned[i]->getName()==command[2]){
+							square_index=i;
+							break;
+						}
+					}
+					if (square_index==-1){
+						cout << "You don't own "<< command[2] <<"." << endl;
+						continue;
+					}
+					if (squaresOwned[square_index]->isImprovable()){
+						string mono_block = squaresOwned[square_index]->getMonopolyBlock();
+						bool failed=false;
+						for (int i=0; i<numPropOwned; i++){
+							if (squaresOwned[i]->getMonopolyBlock()==mono_block && squaresOwned[i]->getImprovementLevel()>0){
+								cout << squaresOwned[i]->getName() << " has improvements." << endl;
+								cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
+								failed = true;
+								break;
+							}
+						}
+						if (failed){
+							continue;
+						}
 					}
 
-                                        if (value > -1) {
-                                                int numPropOwned = squaresOwned.size();
-                                                int square_index = -1;
-                                                string accept = "";
-                                                for (int i = 0; i < numPropOwned; i++) {
-                                                        if (squaresOwned[i]->getName() == command[2]) {
-                                                                square_index = i;
-                                                                break;
-                                                        }
-                                                }
-                                                if (square_index == -1) {
-                                                        cout << "You don't own "<< command[2] <<"." << endl;
-                                                        continue;
-                                                }
+					if (other->getMoney()<value){
+						cout << command[1] << "  doesn't have enough money" << endl;
+						cout<<"The other player doesn't have enough money"<<endl;
+						continue;
+					}
+					cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
+					getline(cin,accept);
+					if (accept!="accept"){
+						cout << command[1] << " has not accepted." << endl;
+						continue;
+					}
+					transferProperty(other, squaresOwned[square_index], otherPlayers);
+					other->subtractMoney(value, otherPlayers);
+					addMoney(value);
+				}
+				else{
+					int numPropOwned = squaresOwned.size();
+					int square_index=-1;
+					string accept="";
+	 			        for (int i=0; i<numPropOwned; i++){
+					  	if (squaresOwned[i]->getName()==command[2]){
+						  	square_index=i;
+						  	break;
+				  		}
+			        	}
+                                	if (square_index==-1){
+						cout << "You don't own "<< command[2] <<"." << endl;
+						continue;
+                                	}
+					if (squaresOwned[square_index]->isImprovable()){
+						string mono_block = squaresOwned[square_index]->getMonopolyBlock();
+						bool failed=false;
+						for (int i=0; i<numPropOwned; i++){
+							if (squaresOwned[i]->getMonopolyBlock()==mono_block && squaresOwned[i]->getImprovementLevel()>0){
+								cout << squaresOwned[i]->getName() << " has improvements." << endl;
+								cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
+								failed=true;
+								break;
+							}
+						}	
+						if(failed){
+							continue;
+						}
+					}
 
-                                                if (squaresOwned[square_index] -> isImprovable()) {
-                                                        string mono_block = squaresOwned[square_index] -> getMonopolyBlock();
-                                                        for (int i = 0; i < numPropOwned; i++) {
-                                                                if (squaresOwned[i]->getMonopolyBlock() == mono_block && squaresOwned[i]->getImprovementLevel() > 0) {
-                                                                        cout << squaresOwned[i]->getName() << " has improvements." << endl;
-									cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
-                                                                        continue;
-                                                                }
-                                                        }
-                                                }
-
-                                                if (other -> getMoney() < value) {
-                                                        cout << command[1] << "  doesn't have enough money" << endl;
-                                                        continue;
-                                                }
-                                                cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
-                                                getline(cin, accept);
-                                                if (accept != "accept") {
-                                                        cout << command[1] << " has not accepted." << endl;
-                                                        continue;;
-                                                }
-                                                transferProperty(other, squaresOwned[square_index], otherPlayers);
-                                                other -> subtractMoney(value, otherPlayers);
-                                                addMoney(value);
-
-                                                continue;;
-                                        }
-
-                                        int numPropOwned = squaresOwned.size();
-                                        int square_index = -1;
-                                        string accept = "";
-                                        for (int i = 0; i < numPropOwned; i++) {
-                                                if (squaresOwned[numPropOwned] -> getName() == command[2]) {
-                                                        square_index = i;
-                                                        break;
-                                                }
-                                        }
-                                        if (square_index == -1) {
-                                                cout << "You don't own "<< command[2] <<"." << endl;
-                                                continue;;
-                                        }
-                                        vector < shared_ptr < Square >> otherSquares = other -> getSquares();
-                                        int numPropOwnedOther = otherSquares.size();
-                                        int square_index_other = -1;
-                                        for (int i = 0; i < numPropOwnedOther; i++) {
-                                                if (otherSquares[numPropOwnedOther] -> getName() == command[3]) {
-                                                        square_index_other = i;
-                                                        break;
-                                                }
-                                        }
-                                        if (square_index_other == -1) {
-                                                cout << command[1] << " doesn't own " << command[3] << "." << endl;
-                                                continue;
-                                        }
-
-                                        if (squaresOwned[square_index] -> isImprovable()) {
-                                                string mono_block = squaresOwned[square_index] -> getMonopolyBlock();
-                                                for (int i = 0; i < numPropOwned; i++) {
-                                                        if (squaresOwned[i] -> getMonopolyBlock() == mono_block && squaresOwned[i] -> getImprovementLevel() > 0) {
-                                                                cout << squaresOwned[i]->getName() << " has improvements." << endl;
-                                                                cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
-                                                                continue;
-                                                        }
-                                                }
-                                        }
-
-                                        if (otherSquares[square_index_other] -> isImprovable()) {
-                                                string mono_block = otherSquares[square_index_other] -> getMonopolyBlock();
-                                                for (int i = 0; i < numPropOwnedOther; i++) {
-                                                        if (otherSquares[i] -> getMonopolyBlock() == mono_block && otherSquares[i] -> getImprovementLevel() > 0) {
-                                                                cout << squaresOwned[i]->getName() << " has improvements." << endl;
-                                                                cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
-                                                                continue;
-                                                        }
-                                                }
-                                        }
-                                        cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
-                                        getline(cin, accept);
-                                        if (accept != "accept") {
-                                                cout << command[1] << " has not accepted." << endl;
-                                                continue;
-                                        }
-                                        transferProperty(other, squaresOwned[square_index], otherPlayers);
-                                        other -> transferProperty(shared_from_this(), otherSquares[square_index_other], otherPlayers);
-                                        continue;
-                                
+					vector<shared_ptr<Square>> otherSquares = other->getSquares();
+					int numPropOwnedOther = otherSquares.size();
+					int square_index_other=-1;
+              				for (int i=0; i<numPropOwnedOther; i++){
+						 if (otherSquares[i]->getName()==command[3]){
+							  square_index_other=i;
+							  break;
+					 	}
+					}
+					if (square_index_other==-1){
+							cout<<command[1] <<" doesn't own " << command[3] << "." <<endl;
+							continue;
+					}
+	
+					if (otherSquares[square_index_other]->isImprovable()){
+						string mono_block = otherSquares[square_index_other]->getMonopolyBlock();
+						bool failed=false;
+						for (int i=0; i<numPropOwnedOther; i++){
+							if (otherSquares[i]->getMonopolyBlock()==mono_block && otherSquares[i]->getImprovementLevel()>0){
+								cout << otherSquares[i]->getName() << " has improvements." << endl;
+								cout << "Cannot trade when the property, or properties in the same block, have improvements" << endl;
+								failed=true;
+								break;
+							}
+						}
+						if(failed){
+							continue;
+						}
+					}
+					cout << "Does " << command[1] << " accept the trade (type accept to accept)" << endl;
+					getline(cin,accept);
+					if (accept!="accept"){
+						cout << command[1] << " has not accepted." << endl;
+						continue;
+					}
+					transferProperty(other, squaresOwned[square_index], otherPlayers);
+					other->transferProperty(shared_from_this(),otherSquares[square_index_other], otherPlayers);
+			
+				}
 			}
 			else if (command[0] == "all") {
                         	int numPlayers = otherPlayers.size();
