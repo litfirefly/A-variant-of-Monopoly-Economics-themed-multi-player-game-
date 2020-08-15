@@ -795,36 +795,27 @@ void Board::play(){
 				}
 			}
 		}
-		else if(command[0] == "mortgage" && command.size()>=2){
-			string property = command[1];
-                	for(int i = 0; i < numOfSquares; i++){     
-					shared_ptr<Square> square = squares[i];  
-					if(square->getName() == property){
-						if(!(square->isMortgaged() || square->getImprovementLevel()==-1)
-							&&(playerList[currPlayer]->getName() == square->getOwner()->getName())){	  
-								square->mortgage(player);
-								break;
-						}
-                                                cout << "Invalid command. Please enter one of the commands given." << endl;                                                                                               		     break;
-				       }
-			}	
-		}
-		else if(command[0] == "unmortgage" && command.size()>=2){
+		   else if(command[0] == "mortgage" && command.size()>=2){
                         string property = command[1];
-			
                         for(int i = 0; i < numOfSquares; i++){
-                                shared_ptr<Square> square = squares[i];
-				if(square->getName() == property){
-				       if((square->isMortgaged()||square->getImprovementLevel()==-1) && 
-						player->getName() == square->getOwner()->getName()){
-                                		square->unmortgage(player); 
-						break;
-				       }	
-                                       cout << "Invalid command. Please enter one of the commands given." << endl;
-				       break;
-				}            
+                                        shared_ptr<Square> square = squares[i];
+                                        if(square->getName() == property){
+                                                square->mortgage(player);
+                                                break;
+                                        }
                         }
                 }
+                else if(command[0] == "unmortgage" && command.size()>=2){
+                        string property = command[1];
+
+                        for(int i = 0; i < numOfSquares; i++){
+                                shared_ptr<Square> square = squares[i];
+                                if(square->getName() == property){
+                                        square->unmortgage(player);
+                                        break;
+                                }
+                        }
+                }		
 		else if(command[0] == "assets"){
 			player->printPlayerAssets();
 		}
